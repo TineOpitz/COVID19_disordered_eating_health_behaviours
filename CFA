@@ -1,0 +1,114 @@
+#CFA for the 9-item Version of the HBCS
+library(lavaan)
+
+#T1
+#No modifications
+model1 <- 'hbcs_scale = ~ t1hbcs9_1+ t1hbcs9_2 + t1hbcs9_3+ t1hbcs9_4 + t1hbcs9_5 + t1hbcs9_6 + t1hbcs9_7 + t1hbcs9_8+ t1hbcs9_9'
+fit <- lavaan::cfa(model1, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit, fit.measures=T,standardized=T)
+modindices(fit, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#With modification (covariance between item 2 and 3)
+model1_2 <- 'hbcs_scale = ~ t1hbcs9_1+ t1hbcs9_2 + t1hbcs9_3+ t1hbcs9_4 + t1hbcs9_5 + t1hbcs9_6 + t1hbcs9_7 + t1hbcs9_8+ t1hbcs9_9
+t1hbcs9_2 ~~ t1hbcs9_3'
+fit_2 <- lavaan::cfa(model1_2, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit_2, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit_2, fit.measures=T,standardized=T)
+modindices(fit_2, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#T2
+model2 <- 'hbcs_scale2 = ~ t2hbcs9_1+ t2hbcs9_2 + t2hbcs9_3+ t2hbcs9_4 + t2hbcs9_5 + t2hbcs9_6 + t2hbcs9_7 + t2hbcs9_8+ t2hbcs9_9
+t2hbcs9_2 ~~ t2hbcs9_3'
+fit2 <- lavaan::cfa(model2, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit2, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit2, fit.measures=T,standardized=T)
+modindices(fit2, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#T3
+model3 <- 'hbcs_scale2 = ~ t3hbcs9_1+ t3hbcs9_2 + t3hbcs9_3+ t3hbcs9_4 + t3hbcs9_5 + t3hbcs9_6 + t3hbcs9_7 + t3hbcs9_8+ t3hbcs9_9
+t3hbcs9_2 ~~ t3hbcs9_3'
+fit3 <- lavaan::cfa(model3, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit3, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit3, fit.measures=T,standardized=T)
+modindices(fit3, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#T4
+model4 <- 'hbcs_scale2 = ~ t4hbcs9_1+ t4hbcs9_2 + t4hbcs9_3+ t4hbcs9_4 + t4hbcs9_5 + t4hbcs9_6 + t4hbcs9_7 + t4hbcs9_8+ t4hbcs9_9
+t4hbcs9_2 ~~ t4hbcs9_3'
+fit4 <- lavaan::cfa(model4, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit4, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit4, fit.measures=T,standardized=T)
+modindices(fit4, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#T5
+model5 <- 'hbcs_scale2 = ~ t5hbcs9_1+ t5hbcs9_2 + t5hbcs9_3+ t5hbcs9_4 + t5hbcs9_5 + t5hbcs9_6 + t5hbcs9_7 + t5hbcs9_8+ t5hbcs9_9
+t5hbcs9_2 ~~ t5hbcs9_3'
+fit5 <- lavaan::cfa(model5, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit5, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit5, fit.measures=T,standardized=T)
+modindices(fit5, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#T6
+model6 <- 'hbcs_scale2 = ~ t6hbcs9_1+ t6hbcs9_2 + t6hbcs9_3+ t6hbcs9_4 + t6hbcs9_5 + t6hbcs9_6 + t6hbcs9_7 + t6hbcs9_8+ t6hbcs9_9
+t6hbcs9_2 ~~ t6hbcs9_3'
+fit6 <- lavaan::cfa(model6, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit6, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit6, fit.measures=T,standardized=T)
+modindices(fit6, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#2 Factor Model (explorative CFA for appendix)
+
+#T1
+model_a <- 'food = ~ t1hbcs9_1+ t1hbcs9_2 + t1hbcs9_3+  t1hbcs9_5 + t1hbcs9_8
+t1hbcs9_2 ~~ t1hbcs9_3
+            exercise = ~ t1hbcs9_4 + t1hbcs9_6 + t1hbcs9_7 + t1hbcs9_9'
+fit7 <- lavaan::cfa(model_a, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit7, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit7, fit.measures=T,standardized=T)
+modindices(fit7, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#T2
+model_b <- 'food = ~ t2hbcs9_1+ t2hbcs9_2 + t2hbcs9_3+  t2hbcs9_5 + t2hbcs9_8
+t2hbcs9_2 ~~ t2hbcs9_3
+            exercise = ~ t2hbcs9_4 + t2hbcs9_6 + t2hbcs9_7 + t2hbcs9_9'
+fit8 <- lavaan::cfa(model_b, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit8, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit8, fit.measures=T,standardized=T)
+modindices(fit8, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#T3
+model_c <- 'food = ~ t3hbcs9_1+ t3hbcs9_2 + t3hbcs9_3+  t3hbcs9_5 + t3hbcs9_8
+t3hbcs9_2 ~~ t3hbcs9_3
+            exercise = ~ t3hbcs9_4 + t3hbcs9_6 + t3hbcs9_7 + t3hbcs9_9'
+fit9 <- lavaan::cfa(model_c, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit9, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit9, fit.measures=T,standardized=T)
+modindices(fit9, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#T4
+model_d <- 'food = ~ t4hbcs9_1+ t4hbcs9_2 + t4hbcs9_3+  t4hbcs9_5 + t4hbcs9_8
+t4hbcs9_2 ~~ t4hbcs9_3
+            exercise = ~ t4hbcs9_4 + t4hbcs9_6 + t4hbcs9_7 + t4hbcs9_9'
+fit10 <- lavaan::cfa(model_d, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit10, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit10, fit.measures=T,standardized=T)
+modindices(fit10, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#T5
+model_e <- 'food = ~ t5hbcs9_1+ t5hbcs9_2 + t5hbcs9_3+  t5hbcs9_5 + t5hbcs9_8
+t5hbcs9_2 ~~ t5hbcs9_3
+            exercise = ~ t5hbcs9_4 + t5hbcs9_6 + t5hbcs9_7 + t5hbcs9_9'
+fit11 <- lavaan::cfa(model_e, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit11, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit11, fit.measures=T,standardized=T)
+modindices(fit11, sort=TRUE, maximum.number=5, alpha=0.05)
+
+#T6
+model_f <- 'food = ~ t6hbcs9_1+ t6hbcs9_2 + t6hbcs9_3+  t6hbcs9_5 + t6hbcs9_8
+t6hbcs9_2 ~~ t6hbcs9_3
+            exercise = ~ t6hbcs9_4 + t6hbcs9_6 + t6hbcs9_7 + t6hbcs9_9'
+fit12 <- lavaan::cfa(model_e, data=newdata4,std.lv=TRUE, estimator="WLSMV")
+fitmeasures(fit12, c('cfi', 'tli', 'rmsea', 'srmr'))
+summary(fit12, fit.measures=T,standardized=T)
+modindices(fit12, sort=TRUE, maximum.number=5, alpha=0.05)
