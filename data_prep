@@ -1,0 +1,276 @@
+#Importing the Dataset
+library(haven)
+data <- read_sav('[your repository]') #specify location
+#convert to a dataframe
+library("tibble")
+my_data <- as_data_frame(data) #renaming the data set, while defining it as a dataframe 
+
+#Sample Selection
+#Creating dummy variables that reflect if a person has filled in (0) or not filled it (1) a data wave
+#Dummy variables represent construct-level missingness
+
+#EDE-QS at each timepoint
+#T1 EDE-QS
+#Create a variable (sum_t) which includes all missing data from the columns and rows specified
+#WATCH OUT: numbers of columns will depend on the dataset
+my_data$sum_t1 <- lapply(c(1:611), function(x) sum(is.na(my_data[x,41:52])))
+#creating a dummy variable to show whole wave missingness
+#12 items in the scale --> if all are missing, 1 will be assigned (otherwise 0)
+my_data$missing_scale <- ifelse(my_data$sum_t1 == "12", 1, 0) 
+
+#T2 EDE-QS
+#Create a variable (sum_t2) which includes are missing data from the columns and rows specified
+my_data$sum_t2 <- lapply(c(1:611), function(x) sum(is.na(my_data[x,237:248])))
+#creating a dummy variable to show whole wave missingness
+my_data$missing_scale2 <- ifelse(my_data$sum_t2 == "12", 1, 0)
+
+#T3 EDE-QS
+#Create a variable (sum_t3) which includes are missing data from the columns and rows specified
+my_data$sum_t3 <- lapply(c(1:611), function(x) sum(is.na(my_data[x,421:432])))
+#creating a dummy variable to show whole wave missingness
+my_data$missing_scale3 <- ifelse(my_data$sum_t3 == "12", 1, 0)
+
+#T4 EDE-QS
+#Create a variable (sum_t4) which includes are missing data from the columns and rows specified
+my_data$sum_t4 <- lapply(c(1:611), function(x) sum(is.na(my_data[x,609:620])))
+#creating a dummy variable to show whole wave missingness
+my_data$missing_scale4 <- ifelse(my_data$sum_t4 == "12", 1, 0)
+
+#T5 EDE-QS
+#Create a variable (sum_t5) which includes are missing data from the columns and rows specified
+my_data$sum_t5 <- lapply(c(1:611), function(x) sum(is.na(my_data[x,796:807])))
+#creating a dummy variable to show whole wave missingness
+my_data$missing_scale5 <- ifelse(my_data$sum_t5 == "12", 1, 0)
+
+#T6 EDE-QS
+#Create a variable (sum_t6) which includes are missing data from the columns and rows specified
+my_data$sum_t6 <- lapply(c(1:611), function(x) sum(is.na(my_data[x,983:994])))
+#creating a dummy variable to show whole wave missingness
+my_data$missing_scale6 <- ifelse(my_data$sum_t6 == "12", 1, 0)
+
+#Creating a missing waves variables based on 6 timepoints
+my_data$six_missing_waves <- (my_data$missing_scale + my_data$missing_scale2 + my_data$missing_scale3 + my_data$missing_scale4 + my_data$missing_scale5 + my_data$missing_scale6)
+
+#Summary of missing data waves
+summary(my_data$six_missing_waves)
+table(my_data$six_missing_waves)
+
+#Construct-Level Missingness for the HBCS
+#This version of the scale uses 9 out of the original 26 items
+
+#T1 HBCS
+#Create a new dataframe only with relevant HBCS items (important, as they are not next to each other in the dataset and cannot be selected as a range) 
+New_dataframe <- cbind(my_data[,129], my_data[,131], my_data[,133], my_data[,134], my_data[,136], my_data[,137], my_data[,143], my_data[,147], my_data[,149])
+New_dataframe <- as_data_frame(New_dataframe)
+print(New_dataframe)
+
+#T1 calculation for the nine specified items
+New_dataframe$hbcssum_t1 <- lapply(c(1:611), function(x) sum(is.na(New_dataframe[x,1:9])))
+New_dataframe$hbcsmissing_scalet1 <- ifelse(New_dataframe$hbcssum_t1 == "9", 1, 0)
+my_data <- cbind(my_data, New_dataframe$hbcsmissing_scalet1)
+
+#T2 HBCS
+#Create a new dataframe only with relevant HBCS items
+New_dataframe2 <- cbind(my_data[,327], my_data[,329], my_data[,331], my_data[,332], my_data[,334], my_data[,335], my_data[,341], my_data[,345], my_data[,347])
+New_dataframe2 <- as_data_frame(New_dataframe2)
+print(New_dataframe2)
+
+#T2 calculation for the nine specified items
+New_dataframe2$hbcssum_t2 <- lapply(c(1:611), function(x) sum(is.na(New_dataframe2[x,1:9])))
+New_dataframe2$hbcsmissing_scalet2 <- ifelse(New_dataframe2$hbcssum_t2 == "9", 1, 0)
+my_data <- cbind(my_data, New_dataframe2$hbcsmissing_scalet2)
+
+#T3 HBCS
+#Create a new dataframe only with relevant HBCS items
+New_dataframe3 <- cbind(my_data[,511], my_data[,513], my_data[,515], my_data[,516], my_data[,518], my_data[,519], my_data[,525], my_data[,529], my_data[,531])
+New_dataframe3 <- as_data_frame(New_dataframe3)
+print(New_dataframe3)
+
+#T3 calculation for the nine specified items
+New_dataframe3$hbcssum_t3 <- lapply(c(1:611), function(x) sum(is.na(New_dataframe3[x,1:9])))
+New_dataframe3$hbcsmissing_scalet3 <- ifelse(New_dataframe3$hbcssum_t3 == "9", 1, 0)
+my_data <- cbind(my_data, New_dataframe3$hbcsmissing_scalet3)
+
+#T4 HBCS
+#Create a new dataframe only with relevant HBCS items
+New_dataframe4 <- cbind(my_data[,699], my_data[,701], my_data[,703], my_data[,704], my_data[,706], my_data[,707], my_data[,713], my_data[,717], my_data[,719])
+New_dataframe4 <- as_data_frame(New_dataframe4)
+print(New_dataframe4)
+
+#T4 calculation for the nine specified items
+New_dataframe4$hbcssum_t4 <- lapply(c(1:611), function(x) sum(is.na(New_dataframe4[x,1:9])))
+New_dataframe4$hbcsmissing_scalet4 <- ifelse(New_dataframe4$hbcssum_t4 == "9", 1, 0)
+my_data <- cbind(my_data, New_dataframe4$hbcsmissing_scalet4)
+
+#T5 HBCS
+#Create a new dataframe only with relevant HBCS items
+New_dataframe5 <- cbind(my_data[,886], my_data[,888], my_data[,890], my_data[,891], my_data[,893], my_data[,894], my_data[,900], my_data[,904], my_data[,906])
+New_dataframe5 <- as_data_frame(New_dataframe5)
+print(New_dataframe5)
+
+#T5 calculation for the nine specified items
+New_dataframe5$hbcssum_t5 <- lapply(c(1:611), function(x) sum(is.na(New_dataframe5[x,1:9])))
+New_dataframe5$hbcsmissing_scalet5 <- ifelse(New_dataframe5$hbcssum_t5 == "9", 1, 0)
+my_data <- cbind(my_data, New_dataframe5$hbcsmissing_scalet5)
+
+#T6 HBCS
+#Create a new dataframe only with relevant HBCS items
+New_dataframe6 <- cbind(my_data[,1073], my_data[,1075], my_data[,1077], my_data[,1078], my_data[,1080], my_data[,1081], my_data[,1087], my_data[,1091], my_data[,1093])
+New_dataframe6 <- as_data_frame(New_dataframe6)
+print(New_dataframe6)
+
+#T6 calculation for the nine specified items
+New_dataframe6$hbcssum_t6 <- lapply(c(1:611), function(x) sum(is.na(New_dataframe6[x,1:9])))
+New_dataframe6$hbcsmissing_scalet6 <- ifelse(New_dataframe6$hbcssum_t6 == "9", 1, 0)
+my_data <- cbind(my_data, New_dataframe6$hbcsmissing_scalet6)
+
+#Renaming new variables in the dataset because $ cannot be part of the variable name
+library(tidyverse)
+names(my_data)[names(my_data) == "New_dataframe$hbcsmissing_scalet1"] <- "hbcsmissing_scalet1"
+names(my_data)[names(my_data) == "New_dataframe2$hbcsmissing_scalet2"] <- "hbcsmissing_scalet2"
+names(my_data)[names(my_data) == "New_dataframe3$hbcsmissing_scalet3"] <- "hbcsmissing_scalet3"
+names(my_data)[names(my_data) == "New_dataframe4$hbcsmissing_scalet4"] <- "hbcsmissing_scalet4"
+names(my_data)[names(my_data) == "New_dataframe5$hbcsmissing_scalet5"] <- "hbcsmissing_scalet5"
+names(my_data)[names(my_data) == "New_dataframe6$hbcsmissing_scalet6"] <- "hbcsmissing_scalet6"
+
+#Number of missing waves per participant for HBCS using only six waves of data
+my_data$hbcs_six_missing_waves <- (my_data$hbcsmissing_scalet1 + my_data$hbcsmissing_scalet2 + my_data$hbcsmissing_scalet3 + my_data$hbcsmissing_scalet4 + my_data$hbcsmissing_scalet5 + my_data$hbcsmissing_scalet6)
+
+#Summary of missing data waves
+summary(my_data$hbcs_six_missing_waves)
+table(my_data$hbcs_six_missing_waves)
+
+#Selecting cases that have a minimum of three data points for both EDE-QS and HBCS
+#Select cases with a minimum of three data point for both EDEQ and HBCS
+newdata2 <- my_data[ which(my_data$six_missing_waves < 4
+                           & my_data$hbcs_six_missing_waves < 4), ]
+
+#Calculating the number of participants that provided information for each wave for the EDE-QS and HBCS for the alternative dataset (newdata2)
+#EDE-QS
+table(newdata2$missing_scale)
+table(newdata2$missing_scale2)
+table(newdata2$missing_scale3)
+table(newdata2$missing_scale4)
+table(newdata2$missing_scale5)
+table(newdata2$missing_scale6)
+#HBCS
+table(newdata2$hbcsmissing_scalet1)
+table(newdata2$hbcsmissing_scalet2)
+table(newdata2$hbcsmissing_scalet3)
+table(newdata2$hbcsmissing_scalet4)
+table(newdata2$hbcsmissing_scalet5)
+table(newdata2$hbcsmissing_scalet6)
+
+#Creating a new dummy variable ED current as baseline ED assessment for current ED
+#Copy the variable at t1 and thereby create a new variable
+newdata2$ed_current <- newdata2$t1ed_current
+
+#Substitute all missing values at t1 with the values reported at t2 within the new variable
+newdata2$ed_current <- ifelse(is.na(newdata2$ed_current), newdata2$t2ed_current, newdata2$ed_current)
+#Substitute all missing values at t1+t2 with the values reported at t3 within the new variable
+newdata2$ed_current <- ifelse(is.na(newdata2$ed_current), newdata2$t3ed_current, newdata2$ed_current)
+#Substitute all missing values at t1+t2+t3 with the values reported at t4 within the new variable
+newdata2$ed_current <- ifelse(is.na(newdata2$ed_current), newdata2$t4ed_current, newdata2$ed_current)
+#Substitute all missing values at t1+t2+t3+t4 with the values reported at t5 within the new variable
+newdata2$ed_current <- ifelse(is.na(newdata2$ed_current), newdata2$t5ed_current, newdata2$ed_current)
+#Substitute all missing values at t1+t2+t3+t4+t5 with the values reported at t6 within the new variable
+newdata2$ed_current <- ifelse(is.na(newdata2$ed_current), newdata2$t6ed_current, newdata2$ed_current)
+
+#Summary of ed current
+table(newdata2$ed_current)
+#Counting the number of participants that indicated a past ED diagnosis
+#Copy the variable at t1 and thereby create a new variable
+newdata2$ed_past <- newdata2$t1ed_past
+table(newdata2$ed_past)
+#Create a new variable that represents both current and past ED diagnosis (ed_dx_both)
+library(dplyr)
+library(tidyverse)
+#Copy variable ED current to create a new variable (ed_dx)
+newdata2$ed_dx <- newdata2$ed_current
+
+#create a new variable which represent current ED (1) or no/not sure about current ED
+newdata2$ed_dx <- ifelse(newdata2$ed_dx  == "1", 1, 0)
+
+#Add the information of a past ED, in case that no current ED was indicated
+newdata2 <- mutate(newdata2,
+                   ed_dx_both = case_when(
+                     ed_dx == 1  ~ 1, 
+                     ed_past==1 ~ 1,
+                     TRUE ~ 0))   
+table(newdata2$ed_dx_both)    
+
+#Crosstabulation tables for country of residence (exploring changes in country of residence)
+#Frequency tables for timepoint comparisons (crosstabulations)
+mytable <- xtabs(~t1country_r + t2country_r, data=newdata2)
+ftable(mytable) # print table
+summary(mytable) # chi-square test of indepedence
+mytable2 <- xtabs(~t2country_r + t3country_r, data=newdata2)
+ftable(mytable2) # print table
+summary(mytable2) # chi-square test of indepedence
+mytable3 <- xtabs(~t3country_r + t4country_r, data=newdata2)
+ftable(mytable3) # print table
+summary(mytable3) # chi-square test of indepedence
+mytable4 <- xtabs(~t4country_r + t5country_r, data=newdata2)
+ftable(mytable4) # print table
+summary(mytable4) # chi-square test of indepedence
+mytable5 <- xtabs(~t5country_r + t6country_r, data=newdata2)
+ftable(mytable5) # print table
+summary(mytable5) # chi-square test of indepedence
+
+#Creating a new country of residence variable (country)
+#Copy the variable at t1 and thereby create a new variable
+newdata2$country <- newdata2$t1country_r
+#Substitute all missing values at t1 with the values reported at t2 within the new variable
+newdata2$country <- ifelse(is.na(newdata2$country), newdata2$t2country_r, newdata2$country)
+#Summary of country
+table(newdata2$country)
+#Repeating the same with t3, t4 and t5
+newdata2$countryfinal <- newdata2$country
+newdata2$countryfinal <- ifelse(is.na(newdata2$countryfinal), newdata2$t3country_r, newdata2$countryfinal)
+table(newdata2$countryfinal)
+newdata2$countryfinal2 <- newdata2$countryfinal
+newdata2$countryfinal2 <- ifelse(is.na(newdata2$countryfinal2), newdata2$t4country_r, newdata2$countryfinal2)
+table(newdata2$countryfinal2)
+newdata2$countryfinal3 <- newdata2$countryfinal2
+newdata2$countryfinal3 <- ifelse(is.na(newdata2$countryfinal3), newdata2$t5country_r, newdata2$countryfinal3)
+table(newdata2$countryfinal3)
+#Rename the variable for ease
+newdata2$country <- newdata2$countryfinal3
+table(newdata2$country)
+
+#Checking reported education level and renaming it for ease
+table(newdata2$t1education_r)
+newdata2$education <- newdata2$t1education_r
+
+#Checking reported ethnicity
+table(newdata2$t1ethnicity)
+
+#Checking reported age
+range(newdata2$t1age, na.rm=TRUE)
+mean(newdata2$t1age, na.rm=TRUE)
+sd(newdata2$t1age, na.rm=TRUE)
+summary(newdata2$t1age)
+
+#Checking reported gender
+table(newdata2$t1gender)
+
+#Next step in data prep
+
+#Relevant items will need to be recoded for the HBCS
+install.packages("car")
+library(car)
+newdata2$t1hbcs_4_reversed <- recode(newdata2$t1hbcs_4, "1=4; 2=3; 3=2; 4=1")
+newdata2$t1hbcs_6_reversed <- recode(newdata2$t1hbcs_6, "1=4; 2=3; 3=2; 4=1")
+newdata2$t2hbcs_4_reversed <- recode(newdata2$t2hbcs_4, "1=4; 2=3; 3=2; 4=1")
+newdata2$t2hbcs_6_reversed <- recode(newdata2$t2hbcs_6, "1=4; 2=3; 3=2; 4=1")
+newdata2$t3hbcs_4_reversed <- recode(newdata2$t3hbcs_4, "1=4; 2=3; 3=2; 4=1")
+newdata2$t3hbcs_6_reversed <- recode(newdata2$t3hbcs_6, "1=4; 2=3; 3=2; 4=1")
+newdata2$t4hbcs_4_reversed <- recode(newdata2$t4hbcs_4, "1=4; 2=3; 3=2; 4=1")
+newdata2$t4hbcs_6_reversed <- recode(newdata2$t4hbcs_6, "1=4; 2=3; 3=2; 4=1")
+newdata2$t5hbcs_4_reversed <- recode(newdata2$t5hbcs_4, "1=4; 2=3; 3=2; 4=1")
+newdata2$t5hbcs_6_reversed <- recode(newdata2$t5hbcs_6, "1=4; 2=3; 3=2; 4=1")
+newdata2$t6hbcs_4_reversed <- recode(newdata2$t6hbcs_4, "1=4; 2=3; 3=2; 4=1")
+newdata2$t6hbcs_6_reversed <- recode(newdata2$t6hbcs_6, "1=4; 2=3; 3=2; 4=1")
+
+
+
