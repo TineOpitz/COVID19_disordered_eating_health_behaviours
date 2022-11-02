@@ -1,0 +1,587 @@
+#Missing Data Analysis
+#Install packages for missing data analysis
+install.packages("NHANES")
+library(NHANES)
+library(dplyr)
+library(naniar)
+
+#Replace relevant missing item 10 values (those missing on purpose)
+#Recoding item number 10 from the EDE-QS, if item 9=0 (Na --> 0)
+
+newdata2$t1edeq_10 <-ifelse(newdata2$t1edeq_9==0,0,newdata2$t1edeq_10)
+newdata2$t2edeq_10 <-ifelse(newdata2$t2edeq_9==0,0,newdata2$t2edeq_10)
+newdata2$t3edeq_10 <-ifelse(newdata2$t3edeq_9==0,0,newdata2$t3edeq_10)
+newdata2$t4edeq_10 <-ifelse(newdata2$t4edeq_9==0,0,newdata2$t4edeq_10)
+newdata2$t5edeq_10 <-ifelse(newdata2$t5edeq_9==0,0,newdata2$t5edeq_10)
+newdata2$t6edeq_10 <-ifelse(newdata2$t6edeq_9==0,0,newdata2$t6edeq_10)
+
+#Item-level missingness
+#Double check column numbers!
+
+#EDE-QS wave t1-t6
+#T1
+# Get number of missings per variable (n and %)
+miss_var_summary(newdata2[,41:52])
+miss_var_table(newdata2[,41:52])
+# Get number of missings per participant (n and %)
+miss_case_summary(newdata2[,41:52])
+miss_case_table(newdata2[,41:52])
+# Which variables contain the most missing variables?
+gg_miss_var(newdata2[,41:52])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(newdata2[,41:52])
+
+
+#T2
+# Get number of missings per variable (n and %)
+miss_var_summary(newdata2[,237:248])
+miss_var_table(newdata2[,237:248])
+# Get number of missings per participant (n and %)
+miss_case_summary(newdata2[,237:248])
+miss_case_table(newdata2[,237:248])
+# Which variables contain the most missing variables?
+gg_miss_var(newdata2[,237:248])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(newdata2[,237:248])
+
+#T3
+# Get number of missings per variable (n and %)
+miss_var_summary(newdata2[,421:432])
+miss_var_table(newdata2[,421:432])
+# Get number of missings per participant (n and %)
+miss_case_summary(newdata2[,421:432])
+miss_case_table(newdata2[,421:432])
+# Which variables contain the most missing variables?
+gg_miss_var(newdata2[,421:432])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(newdata2[,421:432])
+
+#T4
+# Get number of missings per variable (n and %)
+miss_var_summary(newdata2[,609:620])
+miss_var_table(newdata2[,609:620])
+# Get number of missings per participant (n and %)
+miss_case_summary(newdata2[,609:620])
+miss_case_table(newdata2[,609:620])
+# Which variables contain the most missing variables?
+gg_miss_var(newdata2[,609:620])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(newdata2[,609:620])
+
+#T5
+# Get number of missings per variable (n and %)
+miss_var_summary(newdata2[,796:807])
+miss_var_table(newdata2[,796:807])
+# Get number of missings per participant (n and %)
+miss_case_summary(newdata2[,796:807])
+miss_case_table(newdata2[,796:807])
+# Which variables contain the most missing variables?
+gg_miss_var(newdata2[,796:807])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(newdata2[,796:807])
+
+#T6
+# Get number of missings per variable (n and %)
+miss_var_summary(newdata2[,983:994])
+miss_var_table(newdata2[,983:994])
+# Get number of missings per participant (n and %)
+miss_case_summary(newdata2[,983:994])
+miss_case_table(newdata2[,983:994])
+# Which variables contain the most missing variables?
+gg_miss_var(newdata2[,983:994])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(newdata2[,983:994])
+
+#HBCS requires a different approach, as chosen items are not in a continuous row
+#Column numbers need to be double checked (at this point, it does not matter if items are reversed or not)
+
+#Create a new dataframe only with relevant HBCS items 
+New1 <- cbind(newdata2[,129], newdata2[,131], newdata2[,133], newdata2[,134], newdata2[,136], newdata2[,137], newdata2[,143], newdata2[,147], newdata2[,149])
+New1 <- as_data_frame(New1)
+
+#T1 HBCS
+# Get number of missings per variable (n and %)
+miss_var_summary(New1[,1:9])
+miss_var_table(New1[,1:9])
+# Get number of missings per participant (n and %)
+miss_case_summary(New1[,1:9])
+miss_case_table(New1[,1:9])
+# Which variables contain the most missing variables?
+gg_miss_var(New1[,1:9])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(New1[,1:9])
+
+#T2 HBCS
+#Create a new dataframe only with relevant HBCS items
+New2 <- cbind(newdata2[,327], newdata2[,329], newdata2[,331], newdata2[,332], newdata2[,334], newdata2[,335], newdata2[,341], newdata2[,345], newdata2[,347])
+New2 <- as_data_frame(New2)
+# Get number of missings per variable (n and %)
+miss_var_summary(New2[,1:9])
+miss_var_table(New2[,1:9])
+# Get number of missings per participant (n and %)
+miss_case_summary(New2[,1:9])
+miss_case_table(New2[,1:9])
+# Which variables contain the most missing variables?
+gg_miss_var(New2[,1:9])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(New2[,1:9])
+
+#T3 HBCS
+#Create a new dataframe only with relevant HBCS items
+New3 <- cbind(newdata2[,511], newdata2[,513], newdata2[,515], newdata2[,516], newdata2[,518], newdata2[,519], newdata2[,525], newdata2[,529], newdata2[,531])
+New3 <- as_data_frame(New3)
+# Get number of missings per variable (n and %)
+miss_var_summary(New3[,1:9])
+miss_var_table(New3[,1:9])
+# Get number of missings per participant (n and %)
+miss_case_summary(New3[,1:9])
+miss_case_table(New3[,1:9])
+# Which variables contain the most missing variables?
+gg_miss_var(New3[,1:9])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(New3[,1:9])
+
+#T4 HBCS
+New4 <- cbind(newdata2[,699], newdata2[,701], newdata2[,703], newdata2[,704], newdata2[,706], newdata2[,707], newdata2[,713], newdata2[,717], newdata2[,719])
+New4 <- as_data_frame(New4)
+# Get number of missings per variable (n and %)
+miss_var_summary(New4[,1:9])
+miss_var_table(New4[,1:9])
+# Get number of missings per participant (n and %)
+miss_case_summary(New4[,1:9])
+miss_case_table(New4[,1:9])
+# Which variables contain the most missing variables?
+gg_miss_var(New4[,1:9])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(New4[,1:9])
+
+#T5 HBCS
+New5 <- cbind(newdata2[,886], newdata2[,888], newdata2[,890], newdata2[,891], newdata2[,893], newdata2[,894], newdata2[,900], newdata2[,904], newdata2[,906])
+New5 <- as_data_frame(New5)
+# Get number of missings per variable (n and %)
+miss_var_summary(New5[,1:9])
+miss_var_table(New5[,1:9])
+# Get number of missings per participant (n and %)
+miss_case_summary(New5[,1:9])
+miss_case_table(New5[,1:9])
+# Which variables contain the most missing variables?
+gg_miss_var(New5[,1:9])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(New5[,1:9])
+
+#T6 HBCS
+New6 <- cbind(newdata2[,1073], newdata2[,1075], newdata2[,1077], newdata2[,1078], newdata2[,1080], newdata2[,1081], newdata2[,1087], newdata2[,1091], newdata2[,1093])
+New6 <- as_data_frame(New6)
+# Get number of missings per variable (n and %)
+miss_var_summary(New6[,1:9])
+miss_var_table(New6[,1:9])
+# Get number of missings per participant (n and %)
+miss_case_summary(New6[,1:9])
+miss_case_table(New6[,1:9])
+# Which variables contain the most missing variables?
+gg_miss_var(New6[,1:9])
+# Which combinations of variables occur to be missing together?
+gg_miss_upset(New6[,1:9])
+
+#Analyzing Pattern of Missingness (Construct-Level Missingness)
+
+#Predicting missingness using multiple predictors: EDE-QS
+#T1
+missingness <- glm(missing_scale~t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial"(link="logit"))
+summary(missingness)
+#T2
+missingness2 <- glm(missing_scale2~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial")
+summary(missingness2)
+#T3
+missingness3 <- glm(missing_scale3~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial")
+summary(missingness3)
+#T4
+missingness4 <- glm(missing_scale4~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial")
+summary(missingness4)
+#T5
+missingness5 <- glm(missing_scale5~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial")
+summary(missingness5)
+#T6
+missingness6 <- glm(missing_scale6~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial")
+summary(missingness6)
+
+#Predicting missingness using multiple predictors HBCS
+#T1
+missingness_hbcs <- glm(hbcsmissing_scalet1~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial"(link="logit"))
+summary(missingness_hbcs)
+#T2
+missingness_hbcs2 <- glm(hbcsmissing_scalet2~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial"(link="logit"))
+summary(missingness_hbcs2)
+#T3
+missingness_hbcs3 <- glm(hbcsmissing_scalet3~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial"(link="logit"))
+summary(missingness_hbcs3)
+#T4
+missingness_hbcs4 <- glm(hbcsmissing_scalet4~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial"(link="logit"))
+summary(missingness_hbcs4)
+#T5
+missingness_hbcs5 <- glm(hbcsmissing_scalet5~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial"(link="logit"))
+summary(missingness_hbcs5)
+#T6
+missingness_hbcs6 <- glm(hbcsmissing_scalet6~ t1age + t1gender_man + t1ethnicity_white + education + country + ed_dx_both, data=newdata2, family="binomial"(link="logit"))
+summary(missingness_hbcs6)
+
+#Person-Mean Imputation for Single Items
+
+#Calculating row means if less than 20% of items were missing 
+install.packages("imputeTS")
+library(imputeTS)
+library(tidyverse)
+install.packages("dplyr")
+library(dplyr)
+
+#EDE-QS
+
+#T1
+##Step 1 - identify variables for imputation
+EDEQST1 <- newdata2 %>% dplyr::select(41:52) #Important! Check column numbers!
+##Step 2 - Applying imputation calculation to variable
+EDEQST1_imputed <- EDEQST1 %>%  mutate(na.count = rowSums(is.na(EDEQST1)),
+                                       row.mean = rowMeans(EDEQST1, na.rm = TRUE),
+                                       across(1:12, ~ ifelse(is.na(.x) & na.count <= 3, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculation to new dataset
+newdata2_imputed <- newdata2 %>% mutate(
+  t1edeq_1 = EDEQST1_imputed$t1edeq_1,
+  t1edeq_2 = EDEQST1_imputed$t1edeq_2,
+  t1edeq_3 = EDEQST1_imputed$t1edeq_3,
+  t1edeq_4 = EDEQST1_imputed$t1edeq_4,
+  t1edeq_5 = EDEQST1_imputed$t1edeq_5,
+  t1edeq_6 = EDEQST1_imputed$t1edeq_6,
+  t1edeq_7 = EDEQST1_imputed$t1edeq_7,
+  t1edeq_8 = EDEQST1_imputed$t1edeq_8,
+  t1edeq_9 = EDEQST1_imputed$t1edeq_9,
+  t1edeq_10 = EDEQST1_imputed$t1edeq_10,
+  t1edeq_11 = EDEQST1_imputed$t1edeq_11,
+  t1edeq_12 = EDEQST1_imputed$t1edeq_12, na.rm = FALSE)
+
+#T2
+##Step 1 - identify variables for imputation
+EDEQST2 <- newdata2_imputed %>% dplyr::select(237:248)
+##Step 2 - Applying imputation calculation to new variable
+EDEQST2_imputed <- EDEQST2 %>%  mutate(na.count = rowSums(is.na(EDEQST2)),
+                                       row.mean = rowMeans(EDEQST2, na.rm = TRUE),
+                                       across(1:12, ~ ifelse(is.na(.x) & na.count <= 3, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculation to new dataset
+newdata2_imputed2<- newdata2_imputed %>% mutate(
+  t2edeq_1 = EDEQST2_imputed$t2edeq_1,
+  t2edeq_2 = EDEQST2_imputed$t2edeq_2,
+  t2edeq_3 = EDEQST2_imputed$t2edeq_3,
+  t2edeq_4 = EDEQST2_imputed$t2edeq_4,
+  t2edeq_5 = EDEQST2_imputed$t2edeq_5,
+  t2edeq_6 = EDEQST2_imputed$t2edeq_6,
+  t2edeq_7 = EDEQST2_imputed$t2edeq_7,
+  t2edeq_8 = EDEQST2_imputed$t2edeq_8,
+  t2edeq_9 = EDEQST2_imputed$t2edeq_9,
+  t2edeq_10 = EDEQST2_imputed$t2edeq_10,
+  t2edeq_11 = EDEQST2_imputed$t2edeq_11,
+  t2edeq_12 = EDEQST2_imputed$t2edeq_12, na.rm = FALSE)
+
+#T3
+##Step 1 - identify variables for imputation
+EDEQST3 <- newdata2_imputed2 %>% dplyr::select(421:432)
+##Step 2 - Applying imputation calculation to new variable
+EDEQST3_imputed <- EDEQST3 %>%  mutate(na.count = rowSums(is.na(EDEQST3)),
+                                       row.mean = rowMeans(EDEQST3, na.rm = TRUE),
+                                       across(1:12, ~ ifelse(is.na(.x) & na.count <= 3, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculation to new dataset
+newdata2_imputed3 <- newdata2_imputed2 %>% mutate(
+  t3edeq_1 = EDEQST3_imputed$t3edeq_1,
+  t3edeq_2 = EDEQST3_imputed$t3edeq_2,
+  t3edeq_3 = EDEQST3_imputed$t3edeq_3,
+  t3edeq_4 = EDEQST3_imputed$t3edeq_4,
+  t3edeq_5 = EDEQST3_imputed$t3edeq_5,
+  t3edeq_6 = EDEQST3_imputed$t3edeq_6,
+  t3edeq_7 = EDEQST3_imputed$t3edeq_7,
+  t3edeq_8 = EDEQST3_imputed$t3edeq_8,
+  t3edeq_9 = EDEQST3_imputed$t3edeq_9,
+  t3edeq_10 = EDEQST3_imputed$t3edeq_10,
+  t3edeq_11 = EDEQST3_imputed$t3edeq_11,
+  t3edeq_12 = EDEQST3_imputed$t3edeq_12, na.rm = FALSE)
+
+#T4
+##Step 1 - identify variables for imputation
+EDEQST4 <- newdata2_imputed3 %>% dplyr::select(609:620)
+##Step 2 - Applying imputation calculation to new variable
+EDEQST4_imputed <- EDEQST4 %>%  mutate(na.count = rowSums(is.na(EDEQST4)),
+                                       row.mean = rowMeans(EDEQST4, na.rm = TRUE),
+                                       across(1:12, ~ ifelse(is.na(.x) & na.count <= 3, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculation to new dataset
+newdata2_imputed4 <- newdata2_imputed3 %>% mutate(
+  t4edeq_1 = EDEQST4_imputed$t4edeq_1,
+  t4edeq_2 = EDEQST4_imputed$t4edeq_2,
+  t4edeq_3 = EDEQST4_imputed$t4edeq_3,
+  t4edeq_4 = EDEQST4_imputed$t4edeq_4,
+  t4edeq_5 = EDEQST4_imputed$t4edeq_5,
+  t4edeq_6 = EDEQST4_imputed$t4edeq_6,
+  t4edeq_7 = EDEQST4_imputed$t4edeq_7,
+  t4edeq_8 = EDEQST4_imputed$t4edeq_8,
+  t4edeq_9 = EDEQST4_imputed$t4edeq_9,
+  t4edeq_10 = EDEQST4_imputed$t4edeq_10,
+  t4edeq_11 = EDEQST4_imputed$t4edeq_11,
+  t4edeq_12 = EDEQST4_imputed$t4edeq_12, na.rm = FALSE)
+
+#T5
+##Step 1 - identify variables for imputation
+EDEQST5 <- newdata2_imputed4 %>% dplyr::select(796:807)
+##Step 2 - Applying imputation calculation to new variable
+EDEQST5_imputed <- EDEQST5 %>%  mutate(na.count = rowSums(is.na(EDEQST5)),
+                                       row.mean = rowMeans(EDEQST5, na.rm = TRUE),
+                                       across(1:12, ~ ifelse(is.na(.x) & na.count <= 3, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculation to new dataset
+newdata2_imputed5 <- newdata2_imputed4 %>% mutate(
+  t5edeq_1 = EDEQST5_imputed$t5edeq_1,
+  t5edeq_2 = EDEQST5_imputed$t5edeq_2,
+  t5edeq_3 = EDEQST5_imputed$t5edeq_3,
+  t5edeq_4 = EDEQST5_imputed$t5edeq_4,
+  t5edeq_5 = EDEQST5_imputed$t5edeq_5,
+  t5edeq_6 = EDEQST5_imputed$t5edeq_6,
+  t5edeq_7 = EDEQST5_imputed$t5edeq_7,
+  t5edeq_8 = EDEQST5_imputed$t5edeq_8,
+  t5edeq_9 = EDEQST5_imputed$t5edeq_9,
+  t5edeq_10 = EDEQST5_imputed$t5edeq_10,
+  t5edeq_11 = EDEQST5_imputed$t5edeq_11,
+  t5edeq_12 = EDEQST5_imputed$t5edeq_12, na.rm = FALSE)
+
+#T6
+##Step 1 - identify variables for imputation
+EDEQST6 <- newdata2_imputed5 %>% dplyr::select(983:994)
+##Step 2 - Applying imputation calculation to new variable
+EDEQST6_imputed <- EDEQST6 %>%  mutate(na.count = rowSums(is.na(EDEQST6)),
+                                       row.mean = rowMeans(EDEQST6, na.rm = TRUE),
+                                       across(1:12, ~ ifelse(is.na(.x) & na.count <= 3, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculation to new dataset
+newdata2_imputed6 <- newdata2_imputed5 %>% mutate(
+  t6edeq_1 = EDEQST6_imputed$t6edeq_1,
+  t6edeq_2 = EDEQST6_imputed$t6edeq_2,
+  t6edeq_3 = EDEQST6_imputed$t6edeq_3,
+  t6edeq_4 = EDEQST6_imputed$t6edeq_4,
+  t6edeq_5 = EDEQST6_imputed$t6edeq_5,
+  t6edeq_6 = EDEQST6_imputed$t6edeq_6,
+  t6edeq_7 = EDEQST6_imputed$t6edeq_7,
+  t6edeq_8 = EDEQST6_imputed$t6edeq_8,
+  t6edeq_9 = EDEQST6_imputed$t6edeq_9,
+  t6edeq_10 = EDEQST6_imputed$t6edeq_10,
+  t6edeq_11 = EDEQST6_imputed$t6edeq_11,
+  t6edeq_12 = EDEQST6_imputed$t6edeq_12, na.rm = FALSE)
+#Checking for missing data
+library(mice)
+md.pattern(newdata2_imputed6[,41:52])
+md.pattern(newdata2_imputed6[,237:248])
+md.pattern(newdata2_imputed6[,421:432])
+md.pattern(newdata2_imputed6[,609:620])
+md.pattern(newdata2_imputed6[,796:807])
+md.pattern(newdata2_imputed6[,983:994])
+
+#New dataset with imputed values
+view(newdata2_imputed6)
+newdata3 <- newdata2_imputed6
+view(newdata3)
+
+#HBCS mean-person imputation: Again, this requires a different approach due to the columns!
+#New variables will be created which will be added to the end of the dataset --> this allows for the specification of a column-range
+
+#Creating new variables for further analysis
+#T1
+newdata3$t1hbcs9_1 <- newdata3$t1hbcs_2
+newdata3$t1hbcs9_2 <- newdata3$t1hbcs_4_reversed
+newdata3$t1hbcs9_3 <- newdata3$t1hbcs_6_reversed
+newdata3$t1hbcs9_4 <- newdata3$t1hbcs_7
+newdata3$t1hbcs9_5 <- newdata3$t1hbcs_9
+newdata3$t1hbcs9_6 <- newdata3$t1hbcs_10
+newdata3$t1hbcs9_7 <- newdata3$t1hbcs_16
+newdata3$t1hbcs9_8 <- newdata3$t1hbcs_20
+newdata3$t1hbcs9_9 <- newdata3$t1hbcs_22
+#T2
+newdata3$t2hbcs9_1 <- newdata3$t2hbcs_2
+newdata3$t2hbcs9_2 <- newdata3$t2hbcs_4_reversed
+newdata3$t2hbcs9_3 <- newdata3$t2hbcs_6_reversed
+newdata3$t2hbcs9_4 <- newdata3$t2hbcs_7
+newdata3$t2hbcs9_5 <- newdata3$t2hbcs_9
+newdata3$t2hbcs9_6 <- newdata3$t2hbcs_10
+newdata3$t2hbcs9_7 <- newdata3$t2hbcs_16
+newdata3$t2hbcs9_8 <- newdata3$t2hbcs_20
+newdata3$t2hbcs9_9 <- newdata3$t2hbcs_22
+#T3
+newdata3$t3hbcs9_1 <- newdata3$t3hbcs_2
+newdata3$t3hbcs9_2 <- newdata3$t3hbcs_4_reversed
+newdata3$t3hbcs9_3 <- newdata3$t3hbcs_6_reversed
+newdata3$t3hbcs9_4 <- newdata3$t3hbcs_7
+newdata3$t3hbcs9_5 <- newdata3$t3hbcs_9
+newdata3$t3hbcs9_6 <- newdata3$t3hbcs_10
+newdata3$t3hbcs9_7 <- newdata3$t3hbcs_16
+newdata3$t3hbcs9_8 <- newdata3$t3hbcs_20
+newdata3$t3hbcs9_9 <- newdata3$t3hbcs_22
+#T4
+newdata3$t4hbcs9_1 <- newdata3$t4hbcs_2
+newdata3$t4hbcs9_2 <- newdata3$t4hbcs_4_reversed
+newdata3$t4hbcs9_3 <- newdata3$t4hbcs_6_reversed
+newdata3$t4hbcs9_4 <- newdata3$t4hbcs_7
+newdata3$t4hbcs9_5 <- newdata3$t4hbcs_9
+newdata3$t4hbcs9_6 <- newdata3$t4hbcs_10
+newdata3$t4hbcs9_7 <- newdata3$t4hbcs_16
+newdata3$t4hbcs9_8 <- newdata3$t4hbcs_20
+newdata3$t4hbcs9_9 <- newdata3$t4hbcs_22
+#T5
+newdata3$t5hbcs9_1 <- newdata3$t5hbcs_2
+newdata3$t5hbcs9_2 <- newdata3$t5hbcs_4_reversed
+newdata3$t5hbcs9_3 <- newdata3$t5hbcs_6_reversed
+newdata3$t5hbcs9_4 <- newdata3$t5hbcs_7
+newdata3$t5hbcs9_5 <- newdata3$t5hbcs_9
+newdata3$t5hbcs9_6 <- newdata3$t5hbcs_10
+newdata3$t5hbcs9_7 <- newdata3$t5hbcs_16
+newdata3$t5hbcs9_8 <- newdata3$t5hbcs_20
+newdata3$t5hbcs9_9 <- newdata3$t5hbcs_22
+#T6
+newdata3$t6hbcs9_1 <- newdata3$t6hbcs_2
+newdata3$t6hbcs9_2 <- newdata3$t6hbcs_4_reversed
+newdata3$t6hbcs9_3 <- newdata3$t6hbcs_6_reversed
+newdata3$t6hbcs9_4 <- newdata3$t6hbcs_7
+newdata3$t6hbcs9_5 <- newdata3$t6hbcs_9
+newdata3$t6hbcs9_6 <- newdata3$t6hbcs_10
+newdata3$t6hbcs9_7 <- newdata3$t6hbcs_16
+newdata3$t6hbcs9_8 <- newdata3$t6hbcs_20
+newdata3$t6hbcs9_9 <- newdata3$t6hbcs_22
+
+#Same procedure for mean imputation as illustrated for EDE-QS
+
+#T1
+##Step 1 - identify variables for imputation
+HBCST1 <- newdata3 %>% dplyr::select(1181:1189)#check column numbers!!
+##Step 2 - Applying imputation calculation to new variable
+HBCST1_imputed <- HBCST1 %>% mutate(na.count = rowSums(is.na(HBCST1)),
+                                    row.mean = rowMeans(HBCST1, na.rm = TRUE),
+                                    across(1:9, ~ ifelse(is.na(.x) & na.count <= 2, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculation to new dataset
+newdata3_imputed <- newdata3 %>% mutate(
+  t1hbcs9_1 = HBCST1_imputed$t1hbcs9_1,
+  t1hbcs9_2= HBCST1_imputed$t1hbcs9_2,
+  t1hbcs9_3= HBCST1_imputed$t1hbcs9_3,
+  t1hbcs9_4= HBCST1_imputed$t1hbcs9_4,
+  t1hbcs9_5 = HBCST1_imputed$t1hbcs9_5,
+  t1hbcs9_6 = HBCST1_imputed$t1hbcs9_6,
+  t1hbcs9_7 = HBCST1_imputed$t1hbcs9_7,
+  t1hbcs9_8 = HBCST1_imputed$t1hbcs9_8,
+  t1hbcs9_9 = HBCST1_imputed$t1hbcs9_9, na.rm = FALSE)
+
+#T2
+##Step 1 - identify variables for imputation
+HBCST2 <- newdata3_imputed %>% dplyr::select(1190:1198)
+##Step 2 - Applying imputation calculation to new variable
+HBCST2_imputed <- HBCST2 %>%  mutate(na.count = rowSums(is.na(HBCST2)),
+                                     row.mean = rowMeans(HBCST2, na.rm = TRUE),
+                                     across(1:9, ~ ifelse(is.na(.x) & na.count <= 2, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculationt to new dataset
+newdata3_imputed2 <- newdata3_imputed %>% mutate(
+  t2hbcs9_1 = HBCST2_imputed$t2hbcs9_1,
+  t2hbcs9_2= HBCST2_imputed$t2hbcs9_2,
+  t2hbcs9_3= HBCST2_imputed$t2hbcs9_3,
+  t2hbcs9_4= HBCST2_imputed$t2hbcs9_4,
+  t2hbcs9_5 = HBCST2_imputed$t2hbcs9_5,
+  t2hbcs9_6 = HBCST2_imputed$t2hbcs9_6,
+  t2hbcs9_7 = HBCST2_imputed$t2hbcs9_7,
+  t2hbcs9_8 = HBCST2_imputed$t2hbcs9_8,
+  t2hbcs9_9 = HBCST2_imputed$t2hbcs9_9, na.rm = FALSE)
+
+#T3
+##Step 1 - identify variables for imputation
+HBCST3 <- newdata3_imputed2 %>% dplyr::select(1199:1207)
+##Step 2 - Applying imputation calculation to new variable
+HBCST3_imputed <- HBCST3 %>%  mutate(na.count = rowSums(is.na(HBCST3)),
+                                     row.mean = rowMeans(HBCST3, na.rm = TRUE),
+                                     across(1:9, ~ ifelse(is.na(.x) & na.count <= 2, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculationt to new dataset
+newdata3_imputed3 <- newdata3_imputed2 %>% mutate(
+  t3hbcs9_1 = HBCST3_imputed$t3hbcs9_1,
+  t3hbcs9_2= HBCST3_imputed$t3hbcs9_2,
+  t3hbcs9_3= HBCST3_imputed$t3hbcs9_3,
+  t3hbcs9_4= HBCST3_imputed$t3hbcs9_4,
+  t3hbcs9_5 = HBCST3_imputed$t3hbcs9_5,
+  t3hbcs9_6 = HBCST3_imputed$t3hbcs9_6,
+  t3hbcs9_7 = HBCST3_imputed$t3hbcs9_7,
+  t3hbcs9_8 = HBCST3_imputed$t3hbcs9_8,
+  t3hbcs9_9 = HBCST3_imputed$t3hbcs9_9, na.rm = FALSE)
+
+#T4
+##Step 1 - identify variables for imputation
+HBCST4 <- newdata3_imputed3 %>% dplyr::select(1208:1216)
+##Step 2 - Applying imputation calculation to new variable
+HBCST4_imputed <- HBCST4 %>%  mutate(na.count = rowSums(is.na(HBCST4)),
+                                     row.mean = rowMeans(HBCST4, na.rm = TRUE),
+                                     across(1:9, ~ ifelse(is.na(.x) & na.count <= 2, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculation to new dataset
+newdata3_imputed4 <- newdata3_imputed3 %>% mutate(
+  t4hbcs9_1 = HBCST4_imputed$t4hbcs9_1,
+  t4hbcs9_2= HBCST4_imputed$t4hbcs9_2,
+  t4hbcs9_3= HBCST4_imputed$t4hbcs9_3,
+  t4hbcs9_4= HBCST4_imputed$t4hbcs9_4,
+  t4hbcs9_5 = HBCST4_imputed$t4hbcs9_5,
+  t4hbcs9_6 = HBCST4_imputed$t4hbcs9_6,
+  t4hbcs9_7 = HBCST4_imputed$t4hbcs9_7,
+  t4hbcs9_8 = HBCST4_imputed$t4hbcs9_8,
+  t4hbcs9_9 = HBCST4_imputed$t4hbcs9_9, na.rm = FALSE)
+
+#T5
+##Step 1 - identify variables for imputation
+HBCST5 <- newdata3_imputed4 %>% dplyr::select(1217:1225)
+##Step 2 - Applying imputation calculation to new variable
+HBCST5_imputed <- HBCST5 %>%  mutate(na.count = rowSums(is.na(HBCST5)),
+                                     row.mean = rowMeans(HBCST5, na.rm = TRUE),
+                                     across(1:9, ~ ifelse(is.na(.x) & na.count <= 2, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculation to new dataset
+newdata3_imputed5 <- newdata3_imputed4 %>% mutate(
+  t5hbcs9_1 = HBCST5_imputed$t5hbcs9_1,
+  t5hbcs9_2= HBCST5_imputed$t5hbcs9_2,
+  t5hbcs9_3= HBCST5_imputed$t5hbcs9_3,
+  t5hbcs9_4= HBCST5_imputed$t5hbcs9_4,
+  t5hbcs9_5 = HBCST5_imputed$t5hbcs9_5,
+  t5hbcs9_6 = HBCST5_imputed$t5hbcs9_6,
+  t5hbcs9_7 = HBCST5_imputed$t5hbcs9_7,
+  t5hbcs9_8 = HBCST5_imputed$t5hbcs9_8,
+  t5hbcs9_9 = HBCST5_imputed$t5hbcs9_9, na.rm = FALSE)
+
+#T6
+##Step 1 - identify variables for imputation
+HBCST6 <- newdata3_imputed5 %>% dplyr::select(1226:1234)
+##Step 2 - Applying imputation calculation to new variable
+HBCST6_imputed <- HBCST6 %>%  mutate(na.count = rowSums(is.na(HBCST6)),
+                                     row.mean = rowMeans(HBCST6, na.rm = TRUE),
+                                     across(1:9, ~ ifelse(is.na(.x) & na.count <= 2, row.mean, .x))) %>%
+  dplyr::select(-c(na.count, row.mean)) 
+##Step 3 - Applying imputed calculation to new dataset
+newdata3_imputed6 <- newdata3_imputed5 %>% mutate(
+  t6hbcs9_1 = HBCST6_imputed$t6hbcs9_1,
+  t6hbcs9_2= HBCST6_imputed$t6hbcs9_2,
+  t6hbcs9_3= HBCST6_imputed$t6hbcs9_3,
+  t6hbcs9_4= HBCST6_imputed$t6hbcs9_4,
+  t6hbcs9_5 = HBCST6_imputed$t6hbcs9_5,
+  t6hbcs9_6 = HBCST6_imputed$t6hbcs9_6,
+  t6hbcs9_7 = HBCST6_imputed$t6hbcs9_7,
+  t6hbcs9_8 = HBCST6_imputed$t6hbcs9_8,
+  t6hbcs9_9 = HBCST6_imputed$t6hbcs9_9, na.rm = FALSE)
+
+#Checking for missing data
+md.pattern(newdata3_imputed6 [,1181:1189])
+md.pattern(newdata3_imputed6 [,1190:1198])
+md.pattern(newdata3_imputed6 [,1199:1207])
+md.pattern(newdata3_imputed6 [,1208:1216])
+md.pattern(newdata3_imputed6 [,1217:1225])
+md.pattern(newdata3_imputed6 [,1226:1234])
+
+#Creating a new dataset for ease
+#newdata4 is now the dataset for the rest of the analyses
+newdata4 <- newdata3_imputed6
