@@ -1,0 +1,501 @@
+#Latent Growth Curve Analysis
+library(lavaan)
+
+#EDE-QS
+
+#Fitting the Unconditional LGCM Models to Investigate the Growth Trajectory (EDE-QS)
+
+#Model without slope and fixed latent intercept 
+lgcm_model2 <-'
+i =~ 1*t1edeq_sumscore + 1*t2edeq_sumscore + 1*t3edeq_sumscore + 1*t4edeq_sumscore + 1*t5edeq_sumscore + 1*t6edeq_sumscore
+t1edeq_sumscore~~r*t1edeq_sumscore
+t2edeq_sumscore~~r*t2edeq_sumscore
+t3edeq_sumscore~~r*t3edeq_sumscore
+t4edeq_sumscore~~r*t4edeq_sumscore
+t5edeq_sumscore~~r*t5edeq_sumscore
+t6edeq_sumscore~~r*t6edeq_sumscore'
+fit_LGCM_no_slope2 <- growth(lgcm_model2, data=newdata4, estimator="MLR", missing='FIML')
+summary(fit_LGCM_no_slope2, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_no_slope2, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#R2
+install.packages("kableExtra")
+library(kableExtra)
+
+inspect(fit_LGCM_no_slope2, 'r2') %>% #R2
+  kable(digits = 3, col.names = c("R-squared")) %>% 
+  kable_styling(full_width = FALSE)
+
+#Investigating the Growth Trajectory (EDE-QS)
+
+#Linear model
+lgcm_model3 <-'
+i =~ 1*t1edeq_sumscore + 1*t2edeq_sumscore + 1*t3edeq_sumscore + 1*t4edeq_sumscore + 1*t5edeq_sumscore + 1*t6edeq_sumscore
+s =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 2*t3edeq_sumscore + 3*t4edeq_sumscore + 4*t5edeq_sumscore + 5*t6edeq_sumscore
+t1edeq_sumscore~~r*t1edeq_sumscore
+t2edeq_sumscore~~r*t2edeq_sumscore
+t3edeq_sumscore~~r*t3edeq_sumscore
+t4edeq_sumscore~~r*t4edeq_sumscore
+t5edeq_sumscore~~r*t5edeq_sumscore
+t6edeq_sumscore~~r*t6edeq_sumscore'
+#fit_LGCM_linear <- growth(lgcm_model3, data=newdata4, missing = "fiml.x", estimator = "MLR")
+fit_LGCM_linear <- growth(lgcm_model3, data= newdata4, estimator="MLR", missing = "direct") #alternative method (different ML estimator)
+summary(fit_LGCM_linear, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_linear, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#R2
+inspect(fit_LGCM_linear, 'r2') %>% #R2
+  kable(digits = 3, col.names = c("R-squared")) %>% 
+  kable_styling(full_width = FALSE)
+
+# Compare Fits (no slope and slope)
+install.packages("semTools")
+library(semTools)
+
+compareFit(fit_LGCM_no_slope2, fit_LGCM_linear, nested=FALSE)@fit %>%
+  dplyr::select(chisq.scaled,
+                df.scaled,
+                pvalue.scaled,
+                cfi.robust,
+                rmsea.robust,
+                srmr) %>% 
+  knitr::kable(digits = 2) %>%
+  kable_styling(full_width = FALSE)
+
+#Quadratic model
+lgcm_model4 <-'
+i =~ 1*t1edeq_sumscore + 1*t2edeq_sumscore + 1*t3edeq_sumscore + 1*t4edeq_sumscore + 1*t5edeq_sumscore + 1*t6edeq_sumscore
+s =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 2*t3edeq_sumscore + 3*t4edeq_sumscore + 4*t5edeq_sumscore + 5*t6edeq_sumscore
+q =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 4*t3edeq_sumscore + 9*t4edeq_sumscore + 16*t5edeq_sumscore + 25*t6edeq_sumscore
+t1edeq_sumscore~~r*t1edeq_sumscore
+t2edeq_sumscore~~r*t2edeq_sumscore
+t3edeq_sumscore~~r*t3edeq_sumscore
+t4edeq_sumscore~~r*t4edeq_sumscore
+t5edeq_sumscore~~r*t5edeq_sumscore
+t6edeq_sumscore~~r*t6edeq_sumscore'
+fit_LGCM_quadratic <- growth(lgcm_model4, data=newdata4, estimator="MLR", missing='FIML')
+summary(fit_LGCM_quadratic, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_quadratic, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#R2
+inspect(fit_LGCM_quadratic, 'r2') %>% #R2
+  kable(digits = 3, col.names = c("R-squared")) %>% 
+  kable_styling(full_width = FALSE)
+
+#Visualization of the Growth Trajectory (EDE-QS)
+pred_lgm <- predict(fit_LGCM_linear)
+head(pred_lgm)
+map(0:5, # what to loop over, in this case numbers 0 to 5
+    function(x) pred_lgm[, 1] + x * pred_lgm[, 2]) # formula to use
+
+pred_lgm_long <- map(0:5, # loop over time
+                     function(x) pred_lgm[, 1] + x * pred_lgm[, 2]) %>% 
+  reduce(cbind) %>% # bring together the wave predictions 
+  as.data.frame() %>% # make data frame
+  setNames(str_c("T", 1:6)) %>% # give names to variables
+  mutate(id = row_number()) %>% # make unique id
+  gather(-id, key = wave, value = pred) # make long format
+
+#Make graph
+pred_lgm_long %>% 
+  ggplot(aes(wave, pred, group = id)) + # what variables to plot?
+  geom_line(alpha = 0.01) + # add a transparent line for each person
+  stat_summary( # add average line
+    aes(group = 1),
+    fun = mean,
+    geom = "smooth",
+    size = 1.5,
+    color = "red"
+  ) +
+  theme_bw() + # makes graph look nicer
+  labs(y = "EDE-QS", # labels
+       x = "Timepoint")
+
+#Add quadratic growth
+pred_lgm2 <- predict(fit_LGCM_quadratic)
+# create long data for each individual
+pred_lgm2_long <- map(0:5, # loop over time
+                      function(x) pred_lgm2[, 1] + 
+                        x * pred_lgm2[, 2] +
+                        x^2 * pred_lgm2[, 3]) %>% 
+  reduce(cbind) %>% # bring together the wave predictions 
+  as.data.frame() %>% # make data frame
+  setNames(str_c("T", 1:6)) %>% # give names to variables
+  mutate(id = row_number()) %>% # make unique id
+  gather(-id, key = wave, value = pred) # make long format
+
+#Fixing wave names 
+summary(pred_lgm2_long)
+unique(pred_lgm2_long$wave)
+pred_lgm2_long_fix <- pred_lgm2_long %>% mutate(
+  wave = recode_factor(wave,
+                       `Wave1` = "T1",
+                       `Wave2` = "T2",
+                       `Wave3` = "T3",
+                       `Wave4` = "T4",
+                       `Wave5` = "T5",
+                       `Wave6` = "T6"),
+  wave = as.character(wave))
+
+
+#Make graph
+pred_lgm2_long_fix %>% 
+  ggplot(aes(wave, pred, group = id)) + # what variables to plot?
+  geom_line(alpha = 0.01) + # add a transparent line for each person
+  stat_summary( # add average line
+    aes(group = 1),
+    fun = mean,
+    geom = "line",
+    size = 1.5,
+    color = "blue"
+  ) + 
+  stat_summary(data = pred_lgm_long, # add average from linear model
+               aes(group = 1),
+               fun = mean,
+               geom = "line",
+               size = 1.5,
+               color = "red",
+               alpha = 0.5
+  ) +
+  theme_bw() + # makes graph look nicer
+  labs(y = "EDE-QS", # labels
+       x = "Timepoint")
+
+#Once the growth trajectory is established, it is possible to test for measurement error variance homoscedasticity 
+#Test for Error Variance Homoscedasticity 
+lgcm_model5 <-'
+i =~ 1*t1edeq_sumscore + 1*t2edeq_sumscore + 1*t3edeq_sumscore + 1*t4edeq_sumscore + 1*t5edeq_sumscore + 1*t6edeq_sumscore
+s =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 2*t3edeq_sumscore + 3*t4edeq_sumscore + 4*t5edeq_sumscore + 5*t6edeq_sumscore
+q =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 4*t3edeq_sumscore + 9*t4edeq_sumscore + 16*t5edeq_sumscore + 25*t6edeq_sumscore #only included if growth is curvelinear
+'
+fit_LGCM_non_homoscedastic <- growth(lgcm_model5, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_non_homoscedastic, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_non_homoscedastic, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#Model comparison
+anova(fit_LGCM_quadratic, fit_LGCM_non_homoscedastic)
+
+#Test for (In)dependent Measurement Error Variances
+
+lgcm_model6 <-'
+i =~ 1*t1edeq_sumscore + 1*t2edeq_sumscore + 1*t3edeq_sumscore + 1*t4edeq_sumscore + 1*t5edeq_sumscore + 1*t6edeq_sumscore
+s =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 2*t3edeq_sumscore + 3*t4edeq_sumscore + 4*t5edeq_sumscore + 5*t6edeq_sumscore
+q =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 4*t3edeq_sumscore + 9*t4edeq_sumscore + 16*t5edeq_sumscore + 25*t6edeq_sumscore #only included if growth is curvelinear
+#covary error variances at each timepoint with time-adjacent error variances
+t1edeq_sumscore~~t2edeq_sumscore
+t2edeq_sumscore~~t3edeq_sumscore
+t3edeq_sumscore~~t4edeq_sumscore
+t4edeq_sumscore~~t5edeq_sumscore
+t5edeq_sumscore~~t6edeq_sumscore
+'
+fit_LGCM_dependent_error <- growth(lgcm_model6, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_dependent_error, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_dependent_error, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#Model comparison
+anova(fit_LGCM_quadratic, fit_LGCM_dependent_error)
+
+#Time-Invariant Covariate Model (ED Diagnosis as Covariate) (EDE-QS)
+
+lgcm_model7 <-'
+i =~ 1*t1edeq_sumscore + 1*t2edeq_sumscore + 1*t3edeq_sumscore + 1*t4edeq_sumscore + 1*t5edeq_sumscore + 1*t6edeq_sumscore
+s =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 2*t3edeq_sumscore + 3*t4edeq_sumscore + 4*t5edeq_sumscore + 5*t6edeq_sumscore
+q =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 4*t3edeq_sumscore + 9*t4edeq_sumscore + 16*t5edeq_sumscore + 25*t6edeq_sumscore
+#Add time-invariant covariate (ed_dx_both) to the model (added regression)
+i ~ ed_dx_both
+s ~ ed_dx_both
+q ~ ed_dx_both
+t1edeq_sumscore~~r*t1edeq_sumscore
+t2edeq_sumscore~~r*t2edeq_sumscore
+t3edeq_sumscore~~r*t3edeq_sumscore
+t4edeq_sumscore~~r*t4edeq_sumscore
+t5edeq_sumscore~~r*t5edeq_sumscore
+t6edeq_sumscore~~r*t6edeq_sumscore'
+fit_LGCM_ti_covariate <- growth(lgcm_model7, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_ti_covariate, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_ti_covariate, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#R2
+inspect(fit_LGCM_ti_covariate, 'r2') %>% #R2
+  kable(digits = 3, col.names = c("R-squared")) %>% 
+  kable_styling(full_width = FALSE)
+
+library(lme4)
+library(lavaan)
+library(interactions)
+library(tidyverse)
+library(sjmisc)
+library(semPlot)
+
+#SEM plot
+semPaths(fit_LGCM_ti_covariate, "std")
+
+#Time-Invariant Covariate Model (ED Diagnosis and Age as Covariates) (EDE-QS)
+
+#Including age as an additional covariate (as age predicted missingness at 2 timepoints)
+
+lgcm_model7_2 <-'
+i =~ 1*t1edeq_sumscore + 1*t2edeq_sumscore + 1*t3edeq_sumscore + 1*t4edeq_sumscore + 1*t5edeq_sumscore + 1*t6edeq_sumscore
+s =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 2*t3edeq_sumscore + 3*t4edeq_sumscore + 4*t5edeq_sumscore + 5*t6edeq_sumscore
+q =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 4*t3edeq_sumscore + 9*t4edeq_sumscore + 16*t5edeq_sumscore + 25*t6edeq_sumscore
+#Add time-invariant covariate (ed_dx_both) to the model (added regression)
+i ~ ed_dx_both
+s ~ ed_dx_both
+q ~ ed_dx_both
+#Add age as covariate
+i ~ t1age
+s ~ t1age
+q ~ t1age
+t1edeq_sumscore~~r*t1edeq_sumscore
+t2edeq_sumscore~~r*t2edeq_sumscore
+t3edeq_sumscore~~r*t3edeq_sumscore
+t4edeq_sumscore~~r*t4edeq_sumscore
+t5edeq_sumscore~~r*t5edeq_sumscore
+t6edeq_sumscore~~r*t6edeq_sumscore'
+fit_LGCM_ti_covariate_2 <- growth(lgcm_model7_2, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_ti_covariate_2, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_ti_covariate_2, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#Fitting the Unconditional LGCM Models to Investigate the Growth Trajectory (HBCS)
+
+#Model without slope 
+lgcm_model9 <-'
+i =~ 1*t1hbcs_sumscore + 1*t2hbcs_sumscore + 1*t3hbcs_sumscore + 1*t4hbcs_sumscore + 1*t5hbcs_sumscore + 1*t6hbcs_sumscore
+t1hbcs_sumscore~~r*t1hbcs_sumscore
+t2hbcs_sumscore~~r*t2hbcs_sumscore
+t3hbcs_sumscore~~r*t3hbcs_sumscore
+t4hbcs_sumscore~~r*t4hbcs_sumscore
+t5hbcs_sumscore~~r*t5hbcs_sumscore
+t6hbcs_sumscore~~r*t6hbcs_sumscore'
+fit_LGCM_no_slope2_hbcs <- growth(lgcm_model9, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_no_slope2_hbcs, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_no_slope2_hbcs, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#Investigating the Growth Trajectory (HBCS)
+
+#Linear model
+lgcm_model10 <-'
+i =~ 1*t1hbcs_sumscore + 1*t2hbcs_sumscore + 1*t3hbcs_sumscore + 1*t4hbcs_sumscore + 1*t5hbcs_sumscore + 1*t6hbcs_sumscore
+s =~ 0*t1hbcs_sumscore + 1*t2hbcs_sumscore + 2*t3hbcs_sumscore + 3*t4hbcs_sumscore + 4*t5hbcs_sumscore + 5*t6hbcs_sumscore
+t1hbcs_sumscore~~r*t1hbcs_sumscore
+t2hbcs_sumscore~~r*t2hbcs_sumscore
+t3hbcs_sumscore~~r*t3hbcs_sumscore
+t4hbcs_sumscore~~r*t4hbcs_sumscore
+t5hbcs_sumscore~~r*t5hbcs_sumscore
+t6hbcs_sumscore~~r*t6hbcs_sumscore'
+#fit_LGCM_linear_hbcs <- growth(lgcm_model10, data=newdata4, missing = "fiml.x", estimator = "MLR")
+fit_LGCM_linear2_hbcs <- growth(lgcm_model10, data= newdata4, estimator='MLR', missing = "direct") #alternative method (different ML estimator)
+summary(fit_LGCM_linear2_hbcs, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_linear2_hbcs, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#R2
+inspect(fit_LGCM_linear2_hbcs, 'r2') %>% #R2
+  kable(digits = 3, col.names = c("R-squared")) %>% 
+  kable_styling(full_width = FALSE)
+
+#Visualization of the Growth Curve (HBCS)
+
+pred_lgm2 <- predict(fit_LGCM_linear2_hbcs)
+head(pred_lgm2)
+map(0:5, # what to loop over, in this case numbers 0 to 5
+    function(x) pred_lgm2[, 1] + x * pred_lgm2[, 2]) # formula to use
+
+pred_lgm_long2 <- map(0:5, # loop over time
+                      function(x) pred_lgm2[, 1] + x * pred_lgm2[, 2]) %>% 
+  reduce(cbind) %>% # bring together the wave predictions 
+  as.data.frame() %>% # make data frame
+  setNames(str_c("T", 1:6)) %>% # give names to variables
+  mutate(id = row_number()) %>% # make unique id
+  gather(-id, key = wave, value = pred) # make long format
+
+#Make graph
+pred_lgm_long2 %>% 
+  ggplot(aes(wave, pred, group = id)) + # what variables to plot?
+  geom_line(alpha = 0.01) + # add a transparent line for each person
+  stat_summary( # add average line
+    aes(group = 1),
+    fun = mean,
+    geom = "line",
+    size = 1.5,
+    color = "red"
+  ) +
+  theme_bw() + # makes graph look nicer
+  labs(y = "HBCS", # labels
+       x = "Timepoint")
+
+#Quadratic model
+lgcm_model11 <-'
+i =~ 1*t1hbcs_sumscore + 1*t2hbcs_sumscore + 1*t3hbcs_sumscore + 1*t4hbcs_sumscore + 1*t5hbcs_sumscore + 1*t6hbcs_sumscore
+s =~ 0*t1hbcs_sumscore + 1*t2hbcs_sumscore + 2*t3hbcs_sumscore + 3*t4hbcs_sumscore + 4*t5hbcs_sumscore + 5*t6hbcs_sumscore
+q =~ 0*t1hbcs_sumscore + 1*t2hbcs_sumscore + 4*t3hbcs_sumscore + 9*t4hbcs_sumscore + 16*t5hbcs_sumscore + 25*t6hbcs_sumscore
+t1hbcs_sumscore~~r*t1hbcs_sumscore
+t2hbcs_sumscore~~r*t2hbcs_sumscore
+t3hbcs_sumscore~~r*t3hbcs_sumscore
+t4hbcs_sumscore~~r*t4hbcs_sumscore
+t5hbcs_sumscore~~r*t5hbcs_sumscore
+t6hbcs_sumscore~~r*t6hbcs_sumscore'
+fit_LGCM_quadratic_hbcs <- growth(lgcm_model11, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_quadratic_hbcs, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_quadratic_hbcs, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+
+#Once the growth trajectory is established, it is possible to test for measurement error variance homoscedasticity 
+#Test for Error Variance Homoscedasticity (HBCS)
+
+lgcm_model12 <-'
+i =~ 1*t1hbcs_sumscore + 1*t2hbcs_sumscore + 1*t3hbcs_sumscore + 1*t4hbcs_sumscore + 1*t5hbcs_sumscore + 1*t6hbcs_sumscore
+s =~ 0*t1hbcs_sumscore + 1*t2hbcs_sumscore + 2*t3hbcs_sumscore + 3*t4hbcs_sumscore + 4*t5hbcs_sumscore + 5*t6hbcs_sumscore
+'
+fit_LGCM_non_homoscedastic_hbcs <- growth(lgcm_model12, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_non_homoscedastic_hbcs, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_non_homoscedastic_hbcs, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#Model comparison
+anova(fit_LGCM_linear2_hbcs, fit_LGCM_non_homoscedastic_hbcs)
+
+#Test for (In)dependent Measurement Error Variances (HBCS)
+
+lgcm_model13 <-'
+i =~ 1*t1hbcs_sumscore + 1*t2hbcs_sumscore + 1*t3hbcs_sumscore + 1*t4hbcs_sumscore + 1*t5hbcs_sumscore + 1*t6hbcs_sumscore
+s =~ 0*t1hbcs_sumscore + 1*t2hbcs_sumscore + 2*t3hbcs_sumscore + 3*t4hbcs_sumscore + 4*t5hbcs_sumscore + 5*t6hbcs_sumscore
+#Covary error variances at each timepoint with time-adjacent error variances
+t1hbcs_sumscore~~t2hbcs_sumscore
+t2hbcs_sumscore~~t3hbcs_sumscore
+t3hbcs_sumscore~~t4hbcs_sumscore
+t4hbcs_sumscore~~t5hbcs_sumscore
+t5hbcs_sumscore~~t6hbcs_sumscore
+'
+fit_LGCM_dependent_error_hbcs <- growth(lgcm_model13, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_dependent_error_hbcs, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_dependent_error_hbcs, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#Model comparison
+anova(fit_LGCM_linear2_hbcs, fit_LGCM_dependent_error_hbcs
+
+#Time-Invariant Covariate Model (ED Diagnosis as Covariate) (HBCS)
+
+lgcm_model14 <-'
+i =~ 1*t1hbcs_sumscore + 1*t2hbcs_sumscore + 1*t3hbcs_sumscore + 1*t4hbcs_sumscore + 1*t5hbcs_sumscore + 1*t6hbcs_sumscore
+s =~ 0*t1hbcs_sumscore + 1*t2hbcs_sumscore + 2*t3hbcs_sumscore + 3*t4hbcs_sumscore + 4*t5hbcs_sumscore + 5*t6hbcs_sumscore
+#Add time-invariant covariate (ed_dx_both) to the model (added regression)
+i ~ ed_dx_both
+s ~ ed_dx_both
+t1hbcs_sumscore~~r*t1hbcs_sumscore
+t2hbcs_sumscore~~r*t2hbcs_sumscore
+t3hbcs_sumscore~~r*t3hbcs_sumscore
+t4hbcs_sumscore~~r*t4hbcs_sumscore
+t5hbcs_sumscore~~r*t5hbcs_sumscore
+t6hbcs_sumscore~~r*t6hbcs_sumscore'
+fit_LGCM_ti_covariate_hbcs <- growth(lgcm_model14, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_ti_covariate_hbcs, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_ti_covariate_hbcs, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#Time-Invariant Covariate Model (ED Diagnosis and Age as Covariates) (HBCS)
+
+lgcm_model14_2 <-'
+i =~ 1*t1hbcs_sumscore + 1*t2hbcs_sumscore + 1*t3hbcs_sumscore + 1*t4hbcs_sumscore + 1*t5hbcs_sumscore + 1*t6hbcs_sumscore
+s =~ 0*t1hbcs_sumscore + 1*t2hbcs_sumscore + 2*t3hbcs_sumscore + 3*t4hbcs_sumscore + 4*t5hbcs_sumscore + 5*t6hbcs_sumscore
+#Add time-invariant covariate (ed_dx_both) to the model (added regression)
+i ~ ed_dx_both
+s ~ ed_dx_both
+#Add age as covariate
+i ~ t1age
+s ~ t1age
+#Constant error variances across timepoints
+t1hbcs_sumscore~~r*t1hbcs_sumscore
+t2hbcs_sumscore~~r*t2hbcs_sumscore
+t3hbcs_sumscore~~r*t3hbcs_sumscore
+t4hbcs_sumscore~~r*t4hbcs_sumscore
+t5hbcs_sumscore~~r*t5hbcs_sumscore
+t6hbcs_sumscore~~r*t6hbcs_sumscore'
+fit_LGCM_ti_covariate_hbcs_2 <- growth(lgcm_model14_2, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_ti_covariate_hbcs_2, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_ti_covariate_hbcs_2, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#Bivariate LGCM (Parallel Model)
+
+lgcm_model15 <-'
+#edeq growth
+i1 =~ 1*t1edeq_sumscore + 1*t2edeq_sumscore + 1*t3edeq_sumscore + 1*t4edeq_sumscore + 1*t5edeq_sumscore + 1*t6edeq_sumscore
+s1 =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 2*t3edeq_sumscore + 3*t4edeq_sumscore + 4*t5edeq_sumscore + 5*t6edeq_sumscore
+q1 =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 4*t3edeq_sumscore + 9*t4edeq_sumscore + 16*t5edeq_sumscore + 25*t6edeq_sumscore
+#hbcs growth
+i2 =~ 1*t1hbcs_sumscore + 1*t2hbcs_sumscore + 1*t3hbcs_sumscore + 1*t4hbcs_sumscore + 1*t5hbcs_sumscore + 1*t6hbcs_sumscore
+s2 =~ 0*t1hbcs_sumscore + 1*t2hbcs_sumscore + 2*t3hbcs_sumscore + 3*t4hbcs_sumscore + 4*t5hbcs_sumscore + 5*t6hbcs_sumscore
+#intercept-intercept and slope-slope correlations
+s1 ~~ s2
+i1 ~~ i2
+#Add time-invariant covariate (ed_dx_both) to the model (added regression)
+i1 ~ ed_dx_both
+s1 ~ ed_dx_both
+q1 ~ ed_dx_both
+i2 ~ ed_dx_both
+s2 ~ ed_dx_both
+#Constant error variances across timepoints
+#EDE-QS
+t1edeq_sumscore~~r*t1edeq_sumscore
+t2edeq_sumscore~~r*t2edeq_sumscore
+t3edeq_sumscore~~r*t3edeq_sumscore
+t4edeq_sumscore~~r*t4edeq_sumscore
+t5edeq_sumscore~~r*t5edeq_sumscore
+t6edeq_sumscore~~r*t6edeq_sumscore
+#HBCS
+t1hbcs_sumscore~~r*t1hbcs_sumscore
+t2hbcs_sumscore~~r*t2hbcs_sumscore
+t3hbcs_sumscore~~r*t3hbcs_sumscore
+t4hbcs_sumscore~~r*t4hbcs_sumscore
+t5hbcs_sumscore~~r*t5hbcs_sumscore
+t6hbcs_sumscore~~r*t6hbcs_sumscore'
+fit_LGCM_bivariate <- growth(lgcm_model15, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_bivariate, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_bivariate, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+#Bivariate LGCM (Parallel Model) with Age as Additional Covariate
+
+lgcm_model16 <-'
+#edeq growth
+i1 =~ 1*t1edeq_sumscore + 1*t2edeq_sumscore + 1*t3edeq_sumscore + 1*t4edeq_sumscore + 1*t5edeq_sumscore + 1*t6edeq_sumscore
+s1 =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 2*t3edeq_sumscore + 3*t4edeq_sumscore + 4*t5edeq_sumscore + 5*t6edeq_sumscore
+q1 =~ 0*t1edeq_sumscore + 1*t2edeq_sumscore + 4*t3edeq_sumscore + 9*t4edeq_sumscore + 16*t5edeq_sumscore + 25*t6edeq_sumscore
+#hbcs growth
+i2 =~ 1*t1hbcs_sumscore + 1*t2hbcs_sumscore + 1*t3hbcs_sumscore + 1*t4hbcs_sumscore + 1*t5hbcs_sumscore + 1*t6hbcs_sumscore
+s2 =~ 0*t1hbcs_sumscore + 1*t2hbcs_sumscore + 2*t3hbcs_sumscore + 3*t4hbcs_sumscore + 4*t5hbcs_sumscore + 5*t6hbcs_sumscore
+#intercept-intercept and slope-slope correlations
+s1 ~~ s2
+i1 ~~ i2
+#Add time-invariant covariate (ed_dx_both) to the model (added regression)
+i1 ~ ed_dx_both
+s1 ~ ed_dx_both
+q1 ~ ed_dx_both
+i2 ~ ed_dx_both
+s2 ~ ed_dx_both
+#age as additional covariate
+i1 ~ t1age
+s1 ~ t1age
+q1 ~ t1age
+i2 ~ t1age
+s2 ~ t1age
+#constant error variances across timepoints
+#EDE-QS
+t1edeq_sumscore~~r*t1edeq_sumscore
+t2edeq_sumscore~~r*t2edeq_sumscore
+t3edeq_sumscore~~r*t3edeq_sumscore
+t4edeq_sumscore~~r*t4edeq_sumscore
+t5edeq_sumscore~~r*t5edeq_sumscore
+t6edeq_sumscore~~r*t6edeq_sumscore
+#HBCS
+t1hbcs_sumscore~~r*t1hbcs_sumscore
+t2hbcs_sumscore~~r*t2hbcs_sumscore
+t3hbcs_sumscore~~r*t3hbcs_sumscore
+t4hbcs_sumscore~~r*t4hbcs_sumscore
+t5hbcs_sumscore~~r*t5hbcs_sumscore
+t6hbcs_sumscore~~r*t6hbcs_sumscore'
+fit_LGCM_bivariate2 <- growth(lgcm_model16, data=newdata4, estimator='MLR', missing='FIML')
+summary(fit_LGCM_bivariate2, fit.measures=TRUE, standardized=TRUE)
+fitmeasures(fit_LGCM_bivariate2, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+
+# Model R-Squares
+inspect(fit_LGCM_bivariate, 'r2') %>% #R2
+  kable(digits = 3, col.names = c("R-squared")) %>% 
+  kable_styling(full_width = FALSE)
