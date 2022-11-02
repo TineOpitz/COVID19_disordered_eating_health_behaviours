@@ -1,0 +1,289 @@
+#Calculating Internal Reliability
+#CI calculation for McDonald's Omega (Dunn, Baguley & Brunsden, 2014)
+install.packages("MBESS", dependencies = TRUE)
+library(MBESS)
+
+#Omega for HBCS
+#T1
+set.seed(78)
+ci.reliability(data=(newdata4[,c("t1hbcs9_1", "t1hbcs9_2", "t1hbcs9_3", "t1hbcs9_4", "t1hbcs9_5", "t1hbcs9_6", "t1hbcs9_7", "t1hbcs9_8", "t1hbcs9_9")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+#T2
+set.seed(220)
+ci.reliability(data=(newdata4[,c("t2hbcs9_1", "t2hbcs9_2", "t2hbcs9_3", "t2hbcs9_4", "t2hbcs9_5", "t2hbcs9_6", "t2hbcs9_7", "t2hbcs9_8", "t2hbcs9_9")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+#T3
+set.seed(220)
+ci.reliability(data=(newdata4[,c("t3hbcs9_1", "t3hbcs9_2", "t3hbcs9_3", "t3hbcs9_4", "t3hbcs9_5", "t3hbcs9_6", "t3hbcs9_7", "t3hbcs9_8", "t3hbcs9_9")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+#T4
+set.seed(220)
+ci.reliability(data=(newdata4[,c("t4hbcs9_1", "t4hbcs9_2", "t4hbcs9_3", "t4hbcs9_4", "t4hbcs9_5", "t4hbcs9_6", "t4hbcs9_7", "t4hbcs9_8", "t4hbcs9_9")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+#T5
+set.seed(220)
+ci.reliability(data=(newdata4[,c("t5hbcs9_1", "t5hbcs9_2", "t5hbcs9_3", "t5hbcs9_4", "t5hbcs9_5", "t5hbcs9_6", "t5hbcs9_7", "t5hbcs9_8", "t5hbcs9_9")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+#T6
+set.seed(220)
+ci.reliability(data=(newdata4[,c("t6hbcs9_1", "t6hbcs9_2", "t6hbcs9_3", "t6hbcs9_4", "t6hbcs9_5", "t6hbcs9_6", "t6hbcs9_7", "t6hbcs9_8", "t6hbcs9_9")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+
+#Omega for EDEQ
+#T1
+set.seed(456)
+ci.reliability(data=(newdata4[,c("t1edeq_1", "t1edeq_2", "t1edeq_3", "t1edeq_4", "t1edeq_5", "t1edeq_6", "t1edeq_7", "t1edeq_8", "t1edeq_9", "t1edeq_10", "t1edeq_11", "t1edeq_12")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+#T2
+set.seed(456)
+ci.reliability(data=(newdata4[,c("t2edeq_1", "t2edeq_2", "t2edeq_3", "t2edeq_4", "t2edeq_5", "t2edeq_6", "t2edeq_7", "t2edeq_8", "t2edeq_9", "t2edeq_10", "t2edeq_11", "t2edeq_12")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+#T3
+set.seed(456)
+ci.reliability(data=(newdata4[,c("t3edeq_1", "t3edeq_2", "t3edeq_3", "t3edeq_4", "t3edeq_5", "t3edeq_6", "t3edeq_7", "t3edeq_8", "t3edeq_9", "t3edeq_10", "t3edeq_11", "t3edeq_12")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+#T4
+set.seed(456)
+ci.reliability(data=(newdata4[,c("t4edeq_1", "t4edeq_2", "t4edeq_3", "t4edeq_4", "t4edeq_5", "t4edeq_6", "t4edeq_7", "t4edeq_8", "t4edeq_9", "t4edeq_10", "t4edeq_11", "t4edeq_12")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+#T5
+set.seed(456)
+ci.reliability(data=(newdata4[,c("t5edeq_1", "t5edeq_2", "t5edeq_3", "t5edeq_4", "t5edeq_5", "t5edeq_6", "t5edeq_7", "t5edeq_8", "t5edeq_9", "t5edeq_10", "t5edeq_11", "t5edeq_12")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+#T6
+set.seed(456)
+ci.reliability(data=(newdata4[,c("t6edeq_1", "t6edeq_2", "t6edeq_3", "t6edeq_4", "t6edeq_5", "t6edeq_6", "t6edeq_7", "t6edeq_8", "t6edeq_9", "t6edeq_10", "t6edeq_11", "t6edeq_12")]), type="omega", conf.level = 0.95, interval.type="bca", B=1000)
+
+#Cronbach's Alpha (for comparison)
+library(ltm)
+cronbach.alpha(newdata4[,41:52], na.rm =TRUE)#check column names!
+
+#Creating Sum Scores for Both Scales
+#Sum scores for the EDE-QS
+newdata4$t1edeq_sumscore <- rowSums(newdata4[,c("t1edeq_1", "t1edeq_2", "t1edeq_3", "t1edeq_4", "t1edeq_5", "t1edeq_6", "t1edeq_7", "t1edeq_8", "t1edeq_9", "t1edeq_10", "t1edeq_11", "t1edeq_12")])
+newdata4$t2edeq_sumscore <- rowSums(newdata4[,c("t2edeq_1", "t2edeq_2", "t2edeq_3", "t2edeq_4", "t2edeq_5", "t2edeq_6", "t2edeq_7", "t2edeq_8", "t2edeq_9", "t2edeq_10", "t2edeq_11", "t2edeq_12")])
+newdata4$t3edeq_sumscore <- rowSums(newdata4[,c("t3edeq_1", "t3edeq_2", "t3edeq_3", "t3edeq_4", "t3edeq_5", "t3edeq_6", "t3edeq_7", "t3edeq_8", "t3edeq_9", "t3edeq_10", "t3edeq_11", "t3edeq_12")])
+newdata4$t4edeq_sumscore <- rowSums(newdata4[,c("t4edeq_1", "t4edeq_2", "t4edeq_3", "t4edeq_4", "t4edeq_5", "t4edeq_6", "t4edeq_7", "t4edeq_8", "t4edeq_9", "t4edeq_10", "t4edeq_11", "t4edeq_12")])
+newdata4$t5edeq_sumscore <- rowSums(newdata4[,c("t5edeq_1", "t5edeq_2", "t5edeq_3", "t5edeq_4", "t5edeq_5", "t5edeq_6", "t5edeq_7", "t5edeq_8", "t5edeq_9", "t5edeq_10", "t5edeq_11", "t5edeq_12")])
+newdata4$t6edeq_sumscore <- rowSums(newdata4[,c("t6edeq_1", "t6edeq_2", "t6edeq_3", "t6edeq_4", "t6edeq_5", "t6edeq_6", "t6edeq_7", "t6edeq_8", "t6edeq_9", "t6edeq_10", "t6edeq_11", "t6edeq_12")])
+
+#Creating sum scores for the HBCS
+newdata4$t1hbcs_sumscore <- rowSums(newdata4[,c("t1hbcs9_1", "t1hbcs9_2", "t1hbcs9_3", "t1hbcs9_4", "t1hbcs9_5", "t1hbcs9_6", "t1hbcs9_7", "t1hbcs9_8", "t1hbcs9_9")])
+newdata4$t2hbcs_sumscore <- rowSums(newdata4[,c("t2hbcs9_1", "t2hbcs9_2", "t2hbcs9_3", "t2hbcs9_4", "t2hbcs9_5", "t2hbcs9_6", "t2hbcs9_7", "t2hbcs9_8", "t2hbcs9_9")])
+newdata4$t3hbcs_sumscore <- rowSums(newdata4[,c("t3hbcs9_1", "t3hbcs9_2", "t3hbcs9_3", "t3hbcs9_4", "t3hbcs9_5", "t3hbcs9_6", "t3hbcs9_7", "t3hbcs9_8", "t3hbcs9_9")])
+newdata4$t4hbcs_sumscore <- rowSums(newdata4[,c("t4hbcs9_1", "t4hbcs9_2", "t4hbcs9_3", "t4hbcs9_4", "t4hbcs9_5", "t4hbcs9_6", "t4hbcs9_7", "t4hbcs9_8", "t4hbcs9_9")])
+newdata4$t5hbcs_sumscore <- rowSums(newdata4[,c("t5hbcs9_1", "t5hbcs9_2", "t5hbcs9_3", "t5hbcs9_4", "t5hbcs9_5", "t5hbcs9_6", "t5hbcs9_7", "t5hbcs9_8", "t5hbcs9_9")])
+newdata4$t6hbcs_sumscore <- rowSums(newdata4[,c("t6hbcs9_1", "t6hbcs9_2", "t6hbcs9_3", "t6hbcs9_4", "t6hbcs9_5", "t6hbcs9_6", "t6hbcs9_7", "t6hbcs9_8", "t6hbcs9_9")])
+
+#Descriptives
+#Packages to plot data
+install.packages("lessR")
+library(lessR)
+
+#Plotting the sum scores for the EDE-QS
+Plot(t1edeq_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t1edeq_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+Plot(t2edeq_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t2edeq_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+Plot(t3edeq_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t3edeq_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+Plot(t4edeq_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t4edeq_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+Plot(t5edeq_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t5edeq_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+Plot(t6edeq_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t6edeq_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+
+#Plotting the sum scores for the HBCS
+Plot(t1hbcs_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t1hbcs_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+Plot(t2hbcs_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t2hbcs_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+Plot(t3hbcs_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t3hbcs_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+Plot(t4hbcs_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t4hbcs_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+Plot(t5hbcs_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t5hbcs_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+Plot(t6hbcs_sumscore, data=newdata4) #comprehensive plot and descriptive information, including outliers
+Plot(t6hbcs_sumscore, data=newdata4, by1=ed_dx_both) #plotted by ED diagnosis 
+
+#Skewness and Kurtosis
+
+newdata4 %>% 
+  dplyr::select(t1edeq_sumscore:t6edeq_sumscore, 
+                t1hbcs_sumscore:t6hbcs_sumscore) %>%
+  psych::describe() %>%
+  dplyr::select(skew, kurtosis) %>% 
+  knitr::kable(digits=2) %>%
+  kableExtra::kable_styling(full_width = FALSE)
+
+#Alternative way to calculate skewness and kurtosis (Field, 2012)
+install.packages("psych")
+library(psych)
+
+round(describe(newdata4[,c("t1edeq_sumscore", "t2edeq_sumscore", "t3edeq_sumscore", "t4edeq_sumscore", "t5edeq_sumscore", "t6edeq_sumscore")]), digits=3)
+
+#QQ-Plots to Investigate the Normal Distribution
+#EDEQ
+qqnorm(newdata4$t1edeq_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t1edeq_sumscore, col = "steelblue", lwd = 2)
+qqnorm(newdata4$t2edeq_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t2edeq_sumscore, col = "steelblue", lwd = 2)
+qqnorm(newdata4$t3edeq_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t3edeq_sumscore, col = "steelblue", lwd = 2)
+qqnorm(newdata4$t4edeq_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t4edeq_sumscore, col = "steelblue", lwd = 2)
+qqnorm(newdata4$t5edeq_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t5edeq_sumscore, col = "steelblue", lwd = 2)
+qqnorm(newdata4$t6edeq_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t6edeq_sumscore, col = "steelblue", lwd = 2)
+#HBCS
+qqnorm(newdata4$t1hbcs_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t1hbcs_sumscore, col = "steelblue", lwd = 2)
+qqnorm(newdata4$t2hbcs_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t2hbcs_sumscore, col = "steelblue", lwd = 2)
+qqnorm(newdata4$t3hbcs_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t3hbcs_sumscore, col = "steelblue", lwd = 2)
+qqnorm(newdata4$t4hbcs_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t4hbcs_sumscore, col = "steelblue", lwd = 2)
+qqnorm(newdata4$t5hbcs_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t5hbcs_sumscore, col = "steelblue", lwd = 2)
+qqnorm(newdata4$t6hbcs_sumscore, pch = 1, frame = FALSE)
+qqline(newdata4$t6hbcs_sumscore, col = "steelblue", lwd = 2)
+
+#Group Differences ED and non-ED for Both Scales at Each Timepoint 
+install.packages("gmodels", dependencies = TRUE)
+install.packages("car", dependencies = TRUE)
+install.packages("DescTools", dependencies = TRUE)
+install.packages("ggplot2", dependencies = TRUE)
+install.packages("qqplotr", dependencies = TRUE)
+install.packages("dplyr", dependencies = TRUE)
+
+library("gmodels")
+library("car")
+library("DescTools")
+library("ggplot2")
+library("qqplotr")
+library("dplyr")
+
+#Perform the Mann-Whitney U test EDE-QS
+#T1
+m1 <-wilcox.test(t1edeq_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m1)
+#T2
+m2 <-wilcox.test(t2edeq_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m2)
+#T3
+m3 <-wilcox.test(t3edeq_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m3)
+#T4
+m4 <-wilcox.test(t4edeq_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m4)
+#T5
+m5 <-wilcox.test(t5edeq_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m5)
+#T6
+m6 <-wilcox.test(t6edeq_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m6)
+
+#Perform the Mann-Whitney U test HBCS
+#T1
+m1 <-wilcox.test(t1hbcs_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m1)
+#T2
+m2 <-wilcox.test(t2hbcs_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m2)
+#T3
+m3 <-wilcox.test(t3hbcs_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m3)
+#T4
+m4 <-wilcox.test(t4hbcs_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m4)
+#T5
+m5 <-wilcox.test(t5hbcs_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m5)
+#T6
+m6 <-wilcox.test(t6hbcs_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
+print(m6)
+
+#Multivariate Normality
+
+#EDEQ across time
+newdata4 %>%
+  dplyr::select(t1edeq_sumscore:t6edeq_sumscore) %>%
+  psych::mardia(.,) %>%
+  print() 
+
+#HBCS across time
+newdata4 %>%
+  dplyr::select(t1hbcs_sumscore:t6hbcs_sumscore) %>%
+  psych::mardia(.,) %>%
+  print()
+
+#Scatterplots of the data
+
+plot(newdata4$t1edeq_sumscore, newdata4$t1hbcs_sumscore, main = "EDE-QS and HBCS",
+     xlab = "EDE-QS Score", ylab = "HBCS Score",
+     pch = 19, frame = FALSE)
+abline(lm(t1hbcs_sumscore~ t1edeq_sumscore, data = newdata4), col = "blue")
+
+plot(newdata4$t2edeq_sumscore, newdata4$t2hbcs_sumscore, main = "EDE-QS and HBCS",
+     xlab = "EDE-QS Score", ylab = "HBCS Score",
+     pch = 19, frame = FALSE)
+abline(lm(t2hbcs_sumscore~ t2edeq_sumscore, data = newdata4), col = "blue")
+
+plot(newdata4$t3edeq_sumscore, newdata4$t3hbcs_sumscore, main = "EDE-QS and HBCS",
+     xlab = "EDE-QS Score", ylab = "HBCS Score",
+     pch = 19, frame = FALSE)
+abline(lm(t3hbcs_sumscore~ t3edeq_sumscore, data = newdata4), col = "blue")
+
+plot(newdata4$t4edeq_sumscore, newdata4$t4hbcs_sumscore, main = "EDE-QS and HBCS",
+     xlab = "EDE-QS Score", ylab = "HBCS Score",
+     pch = 19, frame = FALSE)
+abline(lm(t4hbcs_sumscore~ t4edeq_sumscore, data = newdata4), col = "blue")
+
+plot(newdata4$t5edeq_sumscore, newdata4$t5hbcs_sumscore, main = "EDE-QS and HBCS",
+     xlab = "EDE-QS Score", ylab = "HBCS Score",
+     pch = 19, frame = FALSE)
+abline(lm(t5hbcs_sumscore~ t5edeq_sumscore, data = newdata4), col = "blue")
+
+plot(newdata4$t6edeq_sumscore, newdata4$t6hbcs_sumscore, main = "EDE-QS and HBCS",
+     xlab = "EDE-QS Score", ylab = "HBCS Score",
+     pch = 19, frame = FALSE)
+abline(lm(t6hbcs_sumscore~ t6edeq_sumscore, data = newdata4), col = "blue")
+
+#Scatterplots using ggplot2
+library(tidyverse)
+ggplot(newdata4, aes(x=newdata4$t1edeq_sumscore, y=newdata4$t1hbcs_sumscore)) + geom_point() + geom_smooth(method=lm)
+ggplot(newdata4, aes(x=newdata4$t2edeq_sumscore, y=newdata4$t2hbcs_sumscore)) + geom_point() + geom_smooth(method=lm)
+ggplot(newdata4, aes(x=newdata4$t3edeq_sumscore, y=newdata4$t3hbcs_sumscore)) + geom_point() + geom_smooth(method=lm)
+ggplot(newdata4, aes(x=newdata4$t4edeq_sumscore, y=newdata4$t4hbcs_sumscore)) + geom_point() + geom_smooth(method=lm)
+ggplot(newdata4, aes(x=newdata4$t5edeq_sumscore, y=newdata4$t5hbcs_sumscore)) + geom_point() + geom_smooth(method=lm)
+ggplot(newdata4, aes(x=newdata4$t6edeq_sumscore, y=newdata4$t6hbcs_sumscore)) + geom_point() + geom_smooth(method=lm)
+
+#Testing the Linear Relationship Between EDE-QS and HBCS
+cov(newdata4$t1edeq_sumscore, newdata4$t1hbcs_sumscore, use="complete", method = c("pearson", "kendall", "spearman"))
+cov(newdata4$t2edeq_sumscore, newdata4$t2hbcs_sumscore, use="complete", method = c("pearson", "kendall", "spearman"))
+cov(newdata4$t3edeq_sumscore, newdata4$t3hbcs_sumscore, use="complete", method = c("pearson", "kendall", "spearman"))
+cov(newdata4$t4edeq_sumscore, newdata4$t4hbcs_sumscore, use="complete", method = c("pearson", "kendall", "spearman"))
+cov(newdata4$t5edeq_sumscore, newdata4$t5hbcs_sumscore, use="complete", method = c("pearson", "kendall", "spearman"))
+cov(newdata4$t6edeq_sumscore, newdata4$t6hbcs_sumscore, use="complete", method = c("pearson", "kendall", "spearman"))
+
+#Correlations
+install.packages("ggpubr")
+library("ggpubr")
+cor(newdata4$t1edeq_meanscore, newdata4$t1hbcs_meanscore,  method = "spearman", use = "complete.obs")
+cor.test(newdata4$t1edeq_meanscore, newdata4$t1hbcs_meanscore, method=c("spearman"))
+cor(newdata4$t2edeq_meanscore, newdata4$t2hbcs_meanscore,  method = "spearman", use = "complete.obs")
+cor.test(newdata4$t2edeq_meanscore, newdata4$t2hbcs_meanscore, method=c("spearman"))
+cor(newdata4$t3edeq_meanscore, newdata4$t3hbcs_meanscore,  method = "spearman", use = "complete.obs")
+cor.test(newdata4$t3edeq_meanscore, newdata4$t3hbcs_meanscore, method=c("spearman"))
+cor(newdata4$t1edeq_meanscore, newdata4$t1hbcs_meanscore,  method = "spearman", use = "complete.obs")
+cor.test(newdata4$t4edeq_meanscore, newdata4$t4hbcs_meanscore, method=c("spearman"))
+cor(newdata4$t1edeq_meanscore, newdata4$t1hbcs_meanscore,  method = "spearman", use = "complete.obs")
+cor.test(newdata4$t5edeq_meanscore, newdata4$t5hbcs_meanscore, method=c("spearman"))
+cor(newdata4$t1edeq_meanscore, newdata4$t1hbcs_meanscore, method = "spearman", use = "complete.obs")
+cor.test(newdata4$t6edeq_meanscore, newdata4$t6hbcs_meanscore, method=c("spearman"))
+
+cor(newdata4$t1edeq_sumscore, newdata4$t1hbcs_sumscore,  method = "spearman", use = "complete.obs")
+cor.test(newdata4$t1edeq_sumscore, newdata4$t1hbcs_sumscore, method=c("spearman"))
+cor(newdata4$t2edeq_sumscore, newdata4$t2hbcs_sumscore,  method = "spearman", use = "complete.obs")
+cor.test(newdata4$t2edeq_sumscore, newdata4$t2hbcs_sumscore, method=c("spearman"))
+cor(newdata4$t3edeq_sumscore, newdata4$t3hbcs_sumscore,  method = "spearman", use = "complete.obs")
+cor.test(newdata4$t3edeq_sumscore, newdata4$t3hbcs_sumscore, method=c("spearman"))
+cor(newdata4$t1edeq_sumscore, newdata4$t1hbcs_sumscore,  method = "spearman", use = "complete.obs")
+cor.test(newdata4$t4edeq_sumscore, newdata4$t4hbcs_sumscore, method=c("spearman"))
+cor(newdata4$t1edeq_sumscore, newdata4$t1hbcs_sumscore,  method = "spearman", use = "complete.obs")
+cor.test(newdata4$t5edeq_sumscore, newdata4$t5hbcs_sumscore, method=c("spearman"))
+cor(newdata4$t1edeq_sumscore, newdata4$t1hbcs_sumscore, method = "spearman", use = "complete.obs")
+cor.test(newdata4$t6edeq_sumscore, newdata4$t6hbcs_sumscore, method=c("spearman"))
