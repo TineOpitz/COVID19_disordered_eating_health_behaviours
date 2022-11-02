@@ -1,5 +1,5 @@
-
-# Source: https://gist.github.com/stevenworthington/3178163
+#This coude is originally from Quintana (2022)
+#For the original code and more information see https://osf.io/z7k4w/ 
 
 ipak <- function(pkg) {
   new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
