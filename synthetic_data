@@ -1,0 +1,217 @@
+
+# Source: https://gist.github.com/stevenworthington/3178163
+
+ipak <- function(pkg) {
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE)
+}
+
+packages <- c("synthpop", "tidyverse", "performance", "effectsize",
+              "see", "patchwork", "knitr", "kableExtra")
+ipak(packages)
+
+# Restructure our dataset for a more informative summary
+
+# Re-save real_data as a data frame instead of a tibble
+
+real_data <- as.data.frame(newdata)
+
+# Convert variables to factors
+
+real_data$t1edeq_1 <- as.factor(real_data$t1edeq_1)
+real_data$t1edeq_2 <- as.factor(real_data$t1edeq_2)
+real_data$t1edeq_3 <- as.factor(real_data$t1edeq_3)
+real_data$t1edeq_4 <- as.factor(real_data$t1edeq_4)
+real_data$t1edeq_5 <- as.factor(real_data$t1edeq_5)
+real_data$t1edeq_6 <- as.factor(real_data$t1edeq_6)
+real_data$t1edeq_7 <- as.factor(real_data$t1edeq_7)
+real_data$t1edeq_8 <- as.factor(real_data$t1edeq_8)
+real_data$t1edeq_9 <- as.factor(real_data$t1edeq_9)
+real_data$t1edeq_10 <- as.factor(real_data$t1edeq_10)
+real_data$t1edeq_11 <- as.factor(real_data$t1edeq_11)
+real_data$t1edeq_12 <- as.factor(real_data$t1edeq_12)
+
+real_data$t2edeq_1 <- as.factor(real_data$t2edeq_1)
+real_data$t2edeq_2 <- as.factor(real_data$t2edeq_2)
+real_data$t2edeq_3 <- as.factor(real_data$t2edeq_3)
+real_data$t2edeq_4 <- as.factor(real_data$t2edeq_4)
+real_data$t2edeq_5 <- as.factor(real_data$t2edeq_5)
+real_data$t2edeq_6 <- as.factor(real_data$t2edeq_6)
+real_data$t2edeq_7 <- as.factor(real_data$t2edeq_7)
+real_data$t2edeq_8 <- as.factor(real_data$t2edeq_8)
+real_data$t2edeq_9 <- as.factor(real_data$t2edeq_9)
+real_data$t2edeq_10 <- as.factor(real_data$t2edeq_10)
+real_data$t2edeq_11 <- as.factor(real_data$t2edeq_11)
+real_data$t2edeq_12 <- as.factor(real_data$t2edeq_12)
+
+real_data$t3edeq_1 <- as.factor(real_data$t3edeq_1)
+real_data$t3edeq_2 <- as.factor(real_data$t3edeq_2)
+real_data$t3edeq_3 <- as.factor(real_data$t3edeq_3)
+real_data$t3edeq_4 <- as.factor(real_data$t3edeq_4)
+real_data$t3edeq_5 <- as.factor(real_data$t3edeq_5)
+real_data$t3edeq_6 <- as.factor(real_data$t3edeq_6)
+real_data$t3edeq_7 <- as.factor(real_data$t3edeq_7)
+real_data$t3edeq_8 <- as.factor(real_data$t3edeq_8)
+real_data$t3edeq_9 <- as.factor(real_data$t3edeq_9)
+real_data$t3edeq_10 <- as.factor(real_data$t3edeq_10)
+real_data$t3edeq_11 <- as.factor(real_data$t3edeq_11)
+real_data$t3edeq_12 <- as.factor(real_data$t3edeq_12)
+
+real_data$t4edeq_1 <- as.factor(real_data$t4edeq_1)
+real_data$t4edeq_2 <- as.factor(real_data$t4edeq_2)
+real_data$t4edeq_3 <- as.factor(real_data$t4edeq_3)
+real_data$t4edeq_4 <- as.factor(real_data$t4edeq_4)
+real_data$t4edeq_5 <- as.factor(real_data$t4edeq_5)
+real_data$t4edeq_6 <- as.factor(real_data$t4edeq_6)
+real_data$t4edeq_7 <- as.factor(real_data$t4edeq_7)
+real_data$t4edeq_8 <- as.factor(real_data$t4edeq_8)
+real_data$t4edeq_9 <- as.factor(real_data$t4edeq_9)
+real_data$t4edeq_10 <- as.factor(real_data$t4edeq_10)
+real_data$t4edeq_11 <- as.factor(real_data$t4edeq_11)
+real_data$t4edeq_12 <- as.factor(real_data$t4edeq_12)
+
+real_data$t5edeq_1 <- as.factor(real_data$t5edeq_1)
+real_data$t5edeq_2 <- as.factor(real_data$t5edeq_2)
+real_data$t5edeq_3 <- as.factor(real_data$t5edeq_3)
+real_data$t5edeq_4 <- as.factor(real_data$t5edeq_4)
+real_data$t5edeq_5 <- as.factor(real_data$t5edeq_5)
+real_data$t5edeq_6 <- as.factor(real_data$t5edeq_6)
+real_data$t5edeq_7 <- as.factor(real_data$t5edeq_7)
+real_data$t5edeq_8 <- as.factor(real_data$t5edeq_8)
+real_data$t5edeq_9 <- as.factor(real_data$t5edeq_9)
+real_data$t5edeq_10 <- as.factor(real_data$t5edeq_10)
+real_data$t5edeq_11 <- as.factor(real_data$t5edeq_11)
+real_data$t5edeq_12 <- as.factor(real_data$t5edeq_12)
+
+real_data$t6edeq_1 <- as.factor(real_data$t6edeq_1)
+real_data$t6edeq_2 <- as.factor(real_data$t6edeq_2)
+real_data$t6edeq_3 <- as.factor(real_data$t6edeq_3)
+real_data$t6edeq_4 <- as.factor(real_data$t6edeq_4)
+real_data$t6edeq_5 <- as.factor(real_data$t6edeq_5)
+real_data$t6edeq_6 <- as.factor(real_data$t6edeq_6)
+real_data$t6edeq_7 <- as.factor(real_data$t6edeq_7)
+real_data$t6edeq_8 <- as.factor(real_data$t6edeq_8)
+real_data$t6edeq_9 <- as.factor(real_data$t6edeq_9)
+real_data$t6edeq_10 <- as.factor(real_data$t6edeq_10)
+real_data$t6edeq_11 <- as.factor(real_data$t6edeq_11)
+real_data$t6edeq_12 <- as.factor(real_data$t6edeq_12)
+
+real_data$t1hbcs_2 <- as.factor(real_data$t1hbcs_2)
+real_data$t1hbcs_4_reversed <- as.factor(real_data$t1hbcs_4_reversed)
+real_data$t1hbcs_6_reversed <- as.factor(real_data$t1hbcs_6_reversed)
+real_data$t1hbcs_7 <- as.factor(real_data$t1hbcs_7)
+real_data$t1hbcs_9 <- as.factor(real_data$t1hbcs_9)
+real_data$t1hbcs_10 <- as.factor(real_data$t1hbcs_10)
+real_data$t1hbcs_16 <- as.factor(real_data$t1hbcs_16)
+real_data$t1hbcs_20 <- as.factor(real_data$t1hbcs_20)
+real_data$t1hbcs_22 <- as.factor(real_data$t1hbcs_22)
+
+real_data$t2hbcs_2 <- as.factor(real_data$t2hbcs_2)
+real_data$t2hbcs_4_reversed <- as.factor(real_data$t2hbcs_4_reversed)
+real_data$t2hbcs_6_reversed <- as.factor(real_data$t2hbcs_6_reversed)
+real_data$t2hbcs_7 <- as.factor(real_data$t2hbcs_7)
+real_data$t2hbcs_9 <- as.factor(real_data$t2hbcs_9)
+real_data$t2hbcs_10 <- as.factor(real_data$t2hbcs_10)
+real_data$t2hbcs_16 <- as.factor(real_data$t2hbcs_16)
+real_data$t2hbcs_20 <- as.factor(real_data$t2hbcs_20)
+real_data$t2hbcs_22 <- as.factor(real_data$t2hbcs_22)
+
+real_data$t3hbcs_2 <- as.factor(real_data$t3hbcs_2)
+real_data$t3hbcs_4_reversed <- as.factor(real_data$t3hbcs_4_reversed)
+real_data$t3hbcs_6_reversed <- as.factor(real_data$t3hbcs_6_reversed)
+real_data$t3hbcs_7 <- as.factor(real_data$t3hbcs_7)
+real_data$t3hbcs_9 <- as.factor(real_data$t3hbcs_9)
+real_data$t3hbcs_10 <- as.factor(real_data$t3hbcs_10)
+real_data$t3hbcs_16 <- as.factor(real_data$t3hbcs_16)
+real_data$t3hbcs_20 <- as.factor(real_data$t3hbcs_20)
+real_data$t3hbcs_22 <- as.factor(real_data$t3hbcs_22)
+
+real_data$t4hbcs_2 <- as.factor(real_data$t4hbcs_2)
+real_data$t4hbcs_4_reversed <- as.factor(real_data$t4hbcs_4_reversed)
+real_data$t4hbcs_6_reversed <- as.factor(real_data$t4hbcs_6_reversed)
+real_data$t4hbcs_7 <- as.factor(real_data$t4hbcs_7)
+real_data$t4hbcs_9 <- as.factor(real_data$t4hbcs_9)
+real_data$t4hbcs_10 <- as.factor(real_data$t4hbcs_10)
+real_data$t4hbcs_16 <- as.factor(real_data$t4hbcs_16)
+real_data$t4hbcs_20 <- as.factor(real_data$t4hbcs_20)
+real_data$t4hbcs_22 <- as.factor(real_data$t4hbcs_22)
+
+real_data$t5hbcs_2 <- as.factor(real_data$t5hbcs_2)
+real_data$t5hbcs_4_reversed <- as.factor(real_data$t5hbcs_4_reversed)
+real_data$t5hbcs_6_reversed <- as.factor(real_data$t5hbcs_6_reversed)
+real_data$t5hbcs_7 <- as.factor(real_data$t5hbcs_7)
+real_data$t5hbcs_9 <- as.factor(real_data$t5hbcs_9)
+real_data$t5hbcs_10 <- as.factor(real_data$t5hbcs_10)
+real_data$t5hbcs_16 <- as.factor(real_data$t5hbcs_16)
+real_data$t5hbcs_20 <- as.factor(real_data$t5hbcs_20)
+real_data$t5hbcs_22 <- as.factor(real_data$t5hbcs_22)
+
+real_data$t6hbcs_2 <- as.factor(real_data$t6hbcs_2)
+real_data$t6hbcs_4_reversed <- as.factor(real_data$t6hbcs_4_reversed)
+real_data$t6hbcs_6_reversed <- as.factor(real_data$t6hbcs_6_reversed)
+real_data$t6hbcs_7 <- as.factor(real_data$t6hbcs_7)
+real_data$t6hbcs_9 <- as.factor(real_data$t6hbcs_9)
+real_data$t6hbcs_10 <- as.factor(real_data$t6hbcs_10)
+real_data$t6hbcs_16 <- as.factor(real_data$t6hbcs_16)
+real_data$t6hbcs_20 <- as.factor(real_data$t6hbcs_20)
+real_data$t6hbcs_22 <- as.factor(real_data$t6hbcs_22)
+
+
+
+codebook.syn(real_data)
+
+
+# Set a seed for reproducible analyses
+my_seed <- 57345
+
+# limit the real data to the ones that are relevant
+
+short_data <- real_data %>% 
+  select(t1edeq_1, t1edeq_2, t1edeq_3, t1edeq_4, t1edeq_5, t1edeq_6, 
+         t1edeq_7, t1edeq_8, t1edeq_9, t1edeq_10, t1edeq_11, t1edeq_12,
+         t2edeq_1, t2edeq_2, t2edeq_3, t2edeq_4, t2edeq_5, t2edeq_6, 
+         t2edeq_7, t2edeq_8, t2edeq_9, t2edeq_10, t2edeq_11, t2edeq_12,
+         t3edeq_1, t3edeq_2, t3edeq_3, t3edeq_4, t3edeq_5, t3edeq_6, 
+         t3edeq_7, t3edeq_8, t3edeq_9, t3edeq_10, t3edeq_11, t3edeq_12,
+         t4edeq_1, t4edeq_2, t4edeq_3, t4edeq_4, t4edeq_5, t4edeq_6, 
+         t4edeq_7, t4edeq_8, t4edeq_9, t4edeq_10, t4edeq_11, t4edeq_12,
+         t5edeq_1, t5edeq_2, t5edeq_3, t5edeq_4, t5edeq_5, t5edeq_6, 
+         t5edeq_7, t5edeq_8, t5edeq_9, t5edeq_10, t5edeq_11, t5edeq_12,
+         t6edeq_1, t6edeq_2, t6edeq_3, t6edeq_4, t6edeq_5, t6edeq_6, 
+         t6edeq_7, t6edeq_8, t6edeq_9, t6edeq_10, t6edeq_11, t6edeq_12, 
+         t1hbcs_2, t1hbcs_4_reversed, t1hbcs_6_reversed, t1hbcs_7, t1hbcs_9, 
+         t1hbcs_10, t1hbcs_16, t1hbcs_20, t1hbcs_22, t2hbcs_2, t2hbcs_4_reversed, 
+         t2hbcs_6_reversed, t2hbcs_7, t2hbcs_9, t2hbcs_10, t2hbcs_16, t2hbcs_20, t2hbcs_22,
+         t3hbcs_2, t3hbcs_4_reversed, t3hbcs_6_reversed, t3hbcs_7, t3hbcs_9, 
+         t3hbcs_10, t3hbcs_16, t3hbcs_20, t3hbcs_22, t4hbcs_2, t4hbcs_4_reversed, 
+         t4hbcs_6_reversed, t4hbcs_7, t4hbcs_9, t4hbcs_10, t4hbcs_16, t4hbcs_20, t4hbcs_22,
+         t5hbcs_2, t5hbcs_4_reversed, t5hbcs_6_reversed, t5hbcs_7, t5hbcs_9, 
+         t5hbcs_10, t5hbcs_16, t5hbcs_20, t5hbcs_22, t6hbcs_2, t6hbcs_4_reversed, 
+         t6hbcs_6_reversed, t6hbcs_7, t6hbcs_9, t6hbcs_10, t6hbcs_16, t6hbcs_20, t6hbcs_22
+         )
+
+# Save the synthetic data using the reproducible seed from above
+
+synth_data <- syn(short_data, 
+                  seed = my_seed)
+
+# Remove replicated uniques and add FAKE label (i.e., statistical disclosure control)
+
+synth_data_sdc <- sdc(synth_data, short_data, 
+                      label = "FAKE_DATA", 
+                      rm.replicated.uniques = TRUE)
+
+
+# Save the synthetic dataset with removed uniques
+write.syn(synth_data_sdc, 
+          filename = "synthetic_edeq_hbcs", 
+          filetype = "csv")
+
+# Compare the original and synthetic dataset
+compare(synth_data, # synthetic data object
+        short_data, # original data
+        stat = "counts") # Choice of counts or percents
+
+
