@@ -156,7 +156,7 @@ library("ggplot2")
 library("qqplotr")
 library("dplyr")
 
-#Perform the Mann-Whitney U test EDE-QS
+#Perform the Wilkoxon test EDE-QS
 #T1
 m1 <-wilcox.test(t1edeq_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
 print(m1)
@@ -176,7 +176,7 @@ print(m5)
 m6 <-wilcox.test(t6edeq_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
 print(m6)
 
-#Perform the Mann-Whitney U test HBCS
+#Perform the Wilkoxon test HBCS
 #T1
 m1 <-wilcox.test(t1hbcs_sumscore ~ ed_dx_both, data=newdata4, na.rm=TRUE, paired=FALSE, exact=FALSE, conf.int=TRUE)
 print(m1)
