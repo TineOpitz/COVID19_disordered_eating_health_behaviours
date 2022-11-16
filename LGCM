@@ -99,7 +99,7 @@ pred_lgm_long <- map(0:5, # loop over time
 #Make graph
 pred_lgm_long %>% 
   ggplot(aes(wave, pred, group = id)) + # what variables to plot?
-  geom_line(alpha = 0.01) + # add a transparent line for each person
+  geom_line(alpha = 0.08) + # add a transparent line for each person
   stat_summary( # add average line
     aes(group = 1),
     fun = mean,
@@ -141,7 +141,7 @@ pred_lgm2_long_fix <- pred_lgm2_long %>% mutate(
 #Make graph
 pred_lgm2_long_fix %>% 
   ggplot(aes(wave, pred, group = id)) + # what variables to plot?
-  geom_line(alpha = 0.01) + # add a transparent line for each person
+  geom_line(alpha = 0.08) + # add a transparent line for each person
   stat_summary( # add average line
     aes(group = 1),
     fun = mean,
@@ -256,6 +256,40 @@ fit_LGCM_ti_covariate_2 <- growth(lgcm_model7_2, data=newdata4, estimator='MLR',
 summary(fit_LGCM_ti_covariate_2, fit.measures=TRUE, standardized=TRUE)
 fitmeasures(fit_LGCM_ti_covariate_2, c('cfi', 'tli', 'rmsea', 'srmr'))
 
+#Visualization of the Growth Trajectory (EDE-QS)
+pred_lgm <- predict(fit_LGCM_ti_covariate_2)
+head(pred_lgm)
+map(0:5, # what to loop over, in this case numbers 0 to 5
+    function(x) pred_lgm[, 1] + x * pred_lgm[, 2]) # formula to use
+
+pred_lgm_long <- map(0:5, # loop over time
+                     function(x) pred_lgm[, 1] + x * pred_lgm[, 2]) %>% 
+  reduce(cbind) %>% # bring together the wave predictions 
+  as.data.frame() %>% # make data frame
+  setNames(str_c("T", 1:6)) %>% # give names to variables
+  mutate(id = row_number()) %>% # make unique id
+  gather(-id, key = wave, value = pred) # make long format
+
+#Make graph
+pred_lgm_long %>% 
+  ggplot(aes(wave, pred, group = id)) + # what variables to plot?
+  geom_line(alpha = 0.08) + # add a transparent line for each person
+  stat_summary( # add average line
+    aes(group = 1),
+    fun = mean,
+    geom = "smooth",
+    size = 1.5,
+    color = "blue"
+  ) +
+  theme_bw() + # makes graph look nicer
+  labs(y = "EDE-QS", # labels
+       x = "Timepoint")
+    
+  ) +
+  theme_classic() + # makes graph look nicer
+  labs(y = "EDE-QS", # labels
+       x = "Timepoint")
+
 #Fitting the Unconditional LGCM Models to Investigate the Growth Trajectory (HBCS)
 
 #Model without slope 
@@ -311,7 +345,7 @@ pred_lgm_long2 <- map(0:5, # loop over time
 #Make graph
 pred_lgm_long2 %>% 
   ggplot(aes(wave, pred, group = id)) + # what variables to plot?
-  geom_line(alpha = 0.01) + # add a transparent line for each person
+  geom_line(alpha = 0.08) + # add a transparent line for each person
   stat_summary( # add average line
     aes(group = 1),
     fun = mean,
@@ -411,6 +445,41 @@ t6hbcs_sumscore~~r*t6hbcs_sumscore'
 fit_LGCM_ti_covariate_hbcs_2 <- growth(lgcm_model14_2, data=newdata4, estimator='MLR', missing='FIML')
 summary(fit_LGCM_ti_covariate_hbcs_2, fit.measures=TRUE, standardized=TRUE)
 fitmeasures(fit_LGCM_ti_covariate_hbcs_2, c('cfi', 'tli', 'rmsea', 'srmr'))
+
+ #Visualization of the Growth Trajectory (HBCS)
+ 
+      pred_lgm <- predict(fit_LGCM_ti_covariate_hbcs_2)
+      head(pred_lgm)
+      map(0:5, # what to loop over, in this case numbers 0 to 5
+          function(x) pred_lgm[, 1] + x * pred_lgm[, 2]) # formula to use
+      
+      pred_lgm_long <- map(0:5, # loop over time
+                           function(x) pred_lgm[, 1] + x * pred_lgm[, 2]) %>% 
+        reduce(cbind) %>% # bring together the wave predictions 
+        as.data.frame() %>% # make data frame
+        setNames(str_c("T", 1:6)) %>% # give names to variables
+        mutate(id = row_number()) %>% # make unique id
+        gather(-id, key = wave, value = pred) # make long format
+      
+      #Make graph
+      pred_lgm_long %>% 
+        ggplot(aes(wave, pred, group = id)) + # what variables to plot?
+        geom_line(alpha = 0.08) + # add a transparent line for each person
+        stat_summary( # add average line
+          aes(group = 1),
+          fun = mean,
+          geom = "smooth",
+          size = 1.5,
+          color = "blue"
+        ) +
+        theme_bw() + # makes graph look nicer
+        labs(y = "HBCS", # labels
+             x = "Timepoint")
+      
+) +
+  theme_classic() + # makes graph look nicer
+  labs(y = "EDE-QS", # labels
+       x = "Timepoint")
 
 #Bivariate LGCM (Parallel Model)
 
